@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import Card from "./Card";
 export default function SideBar() {
   const dataButtons = ["Audio", "Image", "Mapper"];
   return (
@@ -9,23 +9,29 @@ export default function SideBar() {
         </div>
 
         <div id="card">
-          <div className="w-48 h-48 bg-white">
-
-          </div>
+          <Card
+            imgUrl="https://via.placeholder.com/300x300.png?text=Album+Cover"
+            title="Mind Games"  // Nama album atau lagu
+          />
         </div>
+
 
         <div className="w-full flex justify-center" id="upload">
-          <button className="w-[60%]  text-black bg-[#DBDBDB] rounded-md">Upload MIDI</button>
+          <button className="w-56  text-black bg-[#DBDBDB] rounded-md">Upload MIDI (.mid)</button>
         </div>
 
-        <div id="record" className="w-48 h-48 border-y-2 border-white flex flex-col gap-y-4 items-center justify-center">
-          <div id="circle" className="w-[60%] h-[60%] bg-white rounded-full"></div>
-          <div><p>Recording: </p></div>
+
+
+        <div id="record" className="w-56 h-48 border-y-[1px] py-4 border-white flex flex-col gap-y-4 items-center justify-center">
+          <div id="circle" className="w-24 h-24 bg-white rounded-full"></div>
+          <div><p className="text-sm">Recording: </p></div>
         </div>
-        <div id="datasets" className="flex flex-row place-content-between">
+
+
+        <div id="datasets" className="w-56 flex flex-row place-content-between">
             <div id="button" className="flex flex-col">
                 {dataButtons.map((button) => (
-                  <button key={button} className="w-28 bg-[#DBDBDB] text-black rounded-sm mx-2 my-3">
+                  <button key={button} className="w-20 bg-[#DBDBDB] text-black rounded-lg mx-2 my-3 h-7">
                     {button}
                   </button>
                 ))}
@@ -33,7 +39,7 @@ export default function SideBar() {
 
             <div id="data" className="flex flex-col">
                 {dataButtons.map((button) => (
-                  <p key={button} className="mx-2 my-3">
+                  <p key={button} className="text-sm mx-2 my-3 h-7 flex items-center">
                     {button}: Anjay.zip
                   </p>
                 ))}
