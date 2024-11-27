@@ -7,7 +7,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ imgUrl, title }) => {
   return (
-    <div className="w-32 bg-white rounded-lg shadow-md overflow-hidden relative">
+    <div className="w-32 bg-white rounded-b-lg shadow-md overflow-hidden relative">
       {/* Bagian Gambar Album */}
       <div
         className="w-full h-32 bg-cover bg-center relative"

@@ -10,7 +10,7 @@ export default function AudioPlayer() {
         <div id="mainplayer" className="flex flex-col w-1/2 items-center">
             <div id="buttons" className="flex">
                 {imgButtons.map((src) => (
-                    <button>
+                    <button key={src}>
                         <Image src={src} width={30} height={30} alt="prev"/>
                     </button>
                 ))}
