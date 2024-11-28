@@ -1,0 +1,88 @@
+{
+  "songs": [
+    {
+      "audio": "audio1.mid",
+      "album": "image1.jpg",
+      "song": "Mind Games",
+      "singer": "John Lennon",
+      "genre": "Chamber rock"
+    },
+    {
+      "audio": "audio2.mid",
+      "album": "image2.png",
+      "song": "Sailor Song",
+      "singer": "Gigi Perez",
+      "genre": "Indie folk"
+    },
+    {
+      "audio": "audio3.mid",
+      "album": "image3.jpg",
+      "song": "idfc",
+      "singer": "blackbear",
+      "genre": "Alternative R&B"
+    },
+    {
+      "audio": "audio4.mid",
+      "album": "image4.jpg",
+      "song": "Daylight",
+      "singer": "David Kushner",
+      "genre": "Gothic pop"
+    },
+    {
+      "audio": "audio5.mid",
+      "album": "image5.jpg",
+      "song": "APT.",
+      "singer": "Rose & Bruno Mars",
+      "genre": "Jazz"
+    },
+    {
+      "audio": "audio6.mid",
+      "album": "image6.jpg",
+      "song": "GNAT",
+      "singer": "Eminem",
+      "genre": "Hip hop"
+    },
+    {
+      "audio": "audio7.mid",
+      "album": "image7.jpg",
+      "song": "Watch",
+      "singer": "Billie Eilish",
+      "genre": "Pop ballad"
+    },
+    {
+      "audio": "audio8.mid",
+      "album": "image8.jpg",
+      "song": "Perayaan Mati Rasa",
+      "singer": "Umay & Netania",
+      "genre": "Alternative rock"
+    },
+    {
+      "audio": "audio9.mid",
+      "album": "image9.jpg",
+      "song": "Rumah ke Rumah",
+      "singer": "Hindia",
+      "genre": "Indonesian Indie"
+    },
+    {
+      "audio": "audio10.mid",
+      "album": "image10.jpg",
+      "song": "Swimming",
+      "singer": "Flawed Mangoes",
+      "genre": "Electronic Downtempo"
+    },
+    {
+      "audio": "audio11.mid",
+      "album": "image11.jpg",
+      "song": "No. 1 Party Anthem",
+      "singer": "Arctic Monkeys",
+      "genre": "Indie rock"
+    },
+    {
+      "audio": "audio12.mid",
+      "album": "image12.jpg",
+      "song": "Beanie",
+      "singer": "Chealk",
+      "genre": "Indie & Alternative"
+    }
+  ]
+}
