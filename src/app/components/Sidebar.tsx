@@ -1,10 +1,17 @@
+"use client";
 import Image from "next/image";
 import Card from "./Card";
-export default function SideBar() {
+import React, { useState } from "react";
+
+interface SideBarProps {
+  currentView: "audio" | "image";
+}
+
+const SideBar: React.FC<SideBarProps> = ({ currentView }) => {
   const dataButtons = ["Audio", "Image", "Mapper"];
   return (
     <div className="w-1/4 h-screen py-6 bg-gradient-to-b from-[#535353] to-[#303030] flex flex-col gap-y-4 items-center justify-center">
-        <div id="header" className="relative right-20">
+        <div id="header" className="relative right-20 py-4">
           <h1 className="text-white text-3xl">Hummify.</h1>
         </div>
 
@@ -15,12 +22,28 @@ export default function SideBar() {
           />
         </div>
 
-
-        <div className="w-full flex justify-center" id="upload">
-          <button className="w-56  text-black bg-[#DBDBDB] rounded-md">Upload MIDI (.mid)</button>
+        {/* Kondisi Tombol Upload */}
+        <div className="w-full flex justify-center space-x-4 py-3" id="upload">
+          {currentView === "audio" ? (
+            <>
+              <button className="w-28 h-7 text-black bg-[#DBDBDB] rounded-md">
+                Upload MIDI
+              </button>
+              <button className="w-28 h-7 text-black bg-[#DBDBDB] rounded-md">
+                Query
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="w-28 h-7 text-black bg-[#DBDBDB] rounded-md">
+                Upload Image
+              </button>
+              <button className="w-28 h-7 text-black bg-[#DBDBDB] rounded-md">
+                Query
+              </button>
+            </>
+          )}
         </div>
-
-
 
         <div id="record" className="w-56 h-48 border-y-[1px] py-4 border-white flex flex-col gap-y-4 items-center justify-center">
           <div id="circle" className="w-24 h-24 bg-white rounded-full"></div>
@@ -49,3 +72,5 @@ export default function SideBar() {
     </div>
   );
 }
+
+export default SideBar;
