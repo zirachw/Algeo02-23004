@@ -2,14 +2,14 @@
   "songs": [
     {
       "audio": "audio1.mid",
-      "album": "image1.jpg",
+      "album": "image1.jpeg",
       "song": "Mind Games",
       "singer": "John Lennon",
       "genre": "Chamber rock"
     },
     {
       "audio": "audio2.mid",
-      "album": "image2.png",
+      "album": "image2.jpg",
       "song": "Sailor Song",
       "singer": "Gigi Perez",
       "genre": "Indie folk"
@@ -23,21 +23,21 @@
     },
     {
       "audio": "audio4.mid",
-      "album": "image4.jpg",
+      "album": "image4.jpeg",
       "song": "Daylight",
       "singer": "David Kushner",
       "genre": "Gothic pop"
     },
     {
       "audio": "audio5.mid",
-      "album": "image5.jpg",
+      "album": "image5.png",
       "song": "APT.",
       "singer": "Rose & Bruno Mars",
       "genre": "Jazz"
     },
     {
       "audio": "audio6.mid",
-      "album": "image6.jpg",
+      "album": "image6.jpeg",
       "song": "GNAT",
       "singer": "Eminem",
       "genre": "Hip hop"
@@ -51,35 +51,35 @@
     },
     {
       "audio": "audio8.mid",
-      "album": "image8.jpg",
+      "album": "image8.jpeg",
       "song": "Perayaan Mati Rasa",
       "singer": "Umay & Netania",
       "genre": "Alternative rock"
     },
     {
       "audio": "audio9.mid",
-      "album": "image9.jpg",
+      "album": "image9.jpeg",
       "song": "Rumah ke Rumah",
       "singer": "Hindia",
       "genre": "Indonesian Indie"
     },
     {
       "audio": "audio10.mid",
-      "album": "image10.jpg",
+      "album": "image10.jpeg",
       "song": "Swimming",
       "singer": "Flawed Mangoes",
       "genre": "Electronic Downtempo"
     },
     {
       "audio": "audio11.mid",
-      "album": "image11.jpg",
+      "album": "image11.png",
       "song": "No. 1 Party Anthem",
       "singer": "Arctic Monkeys",
       "genre": "Indie rock"
     },
     {
       "audio": "audio12.mid",
-      "album": "image12.jpg",
+      "album": "image12.jpeg",
       "song": "Beanie",
       "singer": "Chealk",
       "genre": "Indie & Alternative"

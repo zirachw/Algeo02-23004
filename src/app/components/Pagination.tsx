@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface PaginationProps {
   currentPage: number;
@@ -24,65 +24,73 @@ const Pagination: React.FC<PaginationProps> = ({
     }
   };
 
+  // Generate the array of page numbers to display
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5; // Show maximum 5 page numbers
+
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(start + maxVisiblePages - 1, totalPages);
+
+    // Adjust start if we're near the end
+    if (end === totalPages) {
+      start = Math.max(1, end - maxVisiblePages + 1);
+    }
+
+    // Add page numbers
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
+
   return (
-    <div className="flex items-center justify-between mt-12">
-      {/* Showing entries */}
-      <div className="text-sm text-black">
+    <div className="flex items-center justify-between mt-8">
+      {/* Showing entries info */}
+      <div className="text-l text-black">
         Showing {startItem} - {endItem} of {totalItems} Entries
       </div>
 
-      {/* Pagination Buttons */}
-      <div className="flex space-x-2">
+      {/* Pagination controls */}
+      <div className="flex items-center gap-2">
+        {/* Previous button */}
         <button
           onClick={() => handlePageClick(currentPage - 1)}
-          className={`px-2 py-1 ${currentPage === 1 ? 'text-gray-300' : 'text-gray-400'}`}
           disabled={currentPage === 1}
+          className={`px-2 py-1 ${
+            currentPage === 1
+              ? "text-gray-300 cursor-not-allowed"
+              : "text-gray-600 hover:text-gray-800"
+          }`}
         >
           &lt;
         </button>
 
-        {/* Logika Pagination Dinamis */}
-        {(() => {
-            const maxVisiblePages = 4;
-            let startPage = Math.max(1, currentPage - 1); 
-            const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages); 
+        {/* Page numbers */}
+        {getPageNumbers().map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageClick(page)}
+            className={`px-3 py-1 rounded ${
+              currentPage === page
+                ? "bg-gray-200 text-gray-800"
+                : "text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            {page}
+          </button>
+        ))}
 
-            // Jika pengguna berada di 4 halaman terakhir
-            if (currentPage > totalPages - maxVisiblePages + 1) {
-            startPage = totalPages - maxVisiblePages + 1;
-            }
-
-            const pages = [];
-            for (let page = startPage; page <= endPage; page++) {
-            pages.push(
-                <button
-                key={page}
-                onClick={() => handlePageClick(page)}
-                className={`px-2 py-1 text-black ${
-                    currentPage === page ? 'bg-gray-200' : 'text-black'
-                }`}
-                >
-                {page}
-                </button>
-            );
-            }
-            return pages;
-         })()}
-
-        {/* Tanda Ellipsis Jika Ada Lebih Banyak Halaman */}
-        {currentPage + 2 < totalPages && <span className='text-black'>...</span>}
-        
-        <button
-          onClick={() => handlePageClick(totalPages)}
-          className={`px-2 py-1 text-black ${currentPage === totalPages ? 'bg-gray-300' : 'text-black'}`}
-        >
-          {totalPages}
-        </button>
-
+        {/* Next button */}
         <button
           onClick={() => handlePageClick(currentPage + 1)}
-          className={`px-2 py-1 ${currentPage === totalPages ? 'text-gray-300' : 'text-gray-400'}`}
           disabled={currentPage === totalPages}
+          className={`px-2 py-1 ${
+            currentPage === totalPages
+              ? "text-gray-300 cursor-not-allowed"
+              : "text-gray-600 hover:text-gray-800"
+          }`}
         >
           &gt;
         </button>

@@ -1,36 +1,53 @@
-import React from 'react';
+// Card.tsx
+import React from "react";
 
 interface CardProps {
-  imgUrl: string;  
-  title: string;  
+  imgUrl: string;
+  title: string;
+  singer: string;
+  genre: string;
+  onPlayClick?: () => void;
+  hasAudioZip: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ imgUrl, title }) => {
+const Card: React.FC<CardProps> = ({
+  imgUrl,
+  title,
+  singer,
+  genre,
+  onPlayClick,
+  hasAudioZip,
+}) => {
   return (
-    <div className="w-32 bg-white rounded-b-lg shadow-[0px_4px_8px_rgba(0,0,0,0.2)] overflow-hidden relative group transform transition-transform duration-300 ease-in-out hover:scale-105">
-      {/* Bagian Gambar Album */}
+    // Using max-w-[160px] to control the maximum width of each card
+    <div className="w-full max-w-[210px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
+      {/* The image container maintains aspect ratio */}
       <div
-        className="w-full h-32 bg-cover bg-center relative"
+        className="aspect-square w-full bg-cover bg-center relative"
         style={{ backgroundImage: `url(${imgUrl})` }}
       >
-        {/* Tombol Play */}
-        <button
-          className="absolute bottom-2 right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-lg cursor-pointer opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all duration-300 ease-in-out"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-black"
-            fill="currentColor"
-            viewBox="0 0 24 24"
+        {hasAudioZip && (
+          <button
+            onClick={onPlayClick}
+            className="absolute bottom-2 right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out hover:bg-gray-100"
           >
-            <path d="M8 5v14l11-7z" /> {/* Ikon Play */}
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-3.5 w-3.5 text-black"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </button>
+        )}
       </div>
 
-      {/* Nama Audio */}
-      <div className="p-2 text-center">
-        <h3 className="text-black text-sm font-medium">{title}</h3>
+      {/* Reduced padding and adjusted text sizes */}
+      <div className="p-2">
+        <h3 className="text-gray-900 text-[20px] pl-1">{title}</h3>
+        <p className="text-gray-600 text-[15px] pl-1">{singer}</p>
+        <p className="text-gray-500 text-[12px] mt-1 pl-1">{genre}</p>
       </div>
     </div>
   );

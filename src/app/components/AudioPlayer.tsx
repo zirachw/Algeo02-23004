@@ -1,30 +1,93 @@
+// AudioPlayer.tsx
 import Image from "next/image";
-export default function AudioPlayer() {
-  const imgButtons = ["/prevbutton.svg", "/pausebutton.svg","/nextbutton.svg"];
+
+interface AudioPlayerProps {
+  isEnabled: boolean;
+  currentSong: {
+    title: string;
+    image: string;
+    singer: string;
+  };
+}
+
+export default function AudioPlayer({
+  isEnabled,
+  currentSong,
+}: AudioPlayerProps) {
+  const imgButtons = ["/prevbutton.svg", "/pausebutton.svg", "/nextbutton.svg"];
+
+  if (!isEnabled || !currentSong) {
+    return null;
+  }
+
   return (
-    <div className="w-full h-20 px-5 gap-x-5 flex flex-row items-center justify-between bg-gradient-to-r from-[#303030] to-[#535353]">
-        <div id="song" className="flex gap-x-5">
-            <div id="songpicture" className="w-10 h-10 bg-white"></div>
-            <div id="songname" className="my-auto">Audio.mid</div>
+    <div className="pl-10 w-full h-20 px-5 flex flex-row items-center bg-gradient-to-r from-[#303030] to-[#535353]">
+      {/* Left section with fixed width */}
+      <div className="w-[250px] flex-shrink-0 flex gap-x-5 items-center">
+        <div className="w-10 h-10 bg-gray-200 flex-shrink-0">
+          {currentSong.image && (
+            <img
+              src={currentSong.image}
+              alt={currentSong.title}
+              className="w-full h-full object-cover"
+            />
+          )}
         </div>
-        <div id="mainplayer" className="flex flex-col w-1/2 items-center">
-            <div id="buttons" className="flex">
-                {imgButtons.map((src) => (
-                    <button key={src}>
-                        <Image src={src} width={30} height={30} alt="prev"/>
-                    </button>
-                ))}
+        <div className="flex flex-col min-w-0">
+          <div className="text-white text-ml truncate">{currentSong.title}</div>
+          {currentSong.singer && (
+            <div className="text-white/60 text-l truncate">
+              {currentSong.singer}
             </div>
-            <div id="track" className="flex w-full gap-x-3">
-                <div id="start">2:39</div>
-                <div id="tracekr" className="w-full h-1 bg-white rounded-lg my-auto"></div>
-                <div id="end">4:22</div>
+          )}
+        </div>
+      </div>
+
+      {/* Center section - Main player */}
+      <div className="flex-1 flex justify-center">
+        <div className="w-[500px] flex flex-col items-center gap-y-2">
+          <div className="flex gap-x-4">
+            {imgButtons.map((src) => (
+              <button key={src} className="hover:opacity-80 transition-opacity">
+                <Image
+                  src={src}
+                  width={24}
+                  height={24}
+                  alt="control"
+                  className="brightness-200"
+                />
+              </button>
+            ))}
+          </div>
+          <div className="flex w-full gap-x-3 items-center">
+            <div className="text-white text-sm flex-shrink-0">0:00</div>
+            <div className="relative flex-1 h-1 bg-white/20 rounded-full">
+              <div
+                className="absolute left-0 top-0 h-full w-0 bg-white rounded-full"
+                style={{ transition: "width 0.1s ease-in-out" }}
+              ></div>
             </div>
+            <div className="text-white text-sm flex-shrink-0">0:00</div>
+          </div>
         </div>
-        <div id="volume" className="flex">
-            <Image src="/volume.svg" width={25} height={25} alt="prev"/>
-            <div id="volumevalue" className="w-20 h-1 bg-white rounded-lg my-auto"></div>
+      </div>
+
+      {/* Right section with fixed width */}
+      <div className="w-[250px] flex-shrink-0 flex justify-end items-center gap-x-3 pr-12">
+        <Image
+          src="/volume.svg"
+          width={20}
+          height={20}
+          alt="volume"
+          className="brightness-200"
+        />
+        <div className="relative w-24 h-1 bg-white/20 rounded-full">
+          <div
+            className="absolute left-0 top-0 h-full w-4/5 bg-white rounded-full"
+            style={{ transition: "width 0.1s ease-in-out" }}
+          ></div>
         </div>
+      </div>
     </div>
   );
 }

@@ -1,15 +1,41 @@
-import React from 'react';
-import Card from './Card'; // Menggunakan komponen Card yang telah dibuat sebelumnya
+// CardList.tsx
+import React from "react";
+import Card from "./Card";
 
 interface CardListProps {
-  data: { title: string; image: string }[];
+  data: {
+    title: string;
+    image: string;
+    singer: string;
+    genre: string;
+  }[];
+  onPlayClick?: (song: {
+    title: string;
+    image: string;
+    singer: string;
+    genre: string;
+  }) => void;
+  hasAudioZip: boolean;
 }
 
-const CardList: React.FC<CardListProps> = ({ data }) => {
+const CardList: React.FC<CardListProps> = ({
+  data,
+  onPlayClick,
+  hasAudioZip,
+}) => {
   return (
-    <div className="grid grid-cols-5 gap-6">
+    // Using a smaller gap (gap-4) and maintaining 6 columns at xl breakpoint
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 px-4">
       {data.map((item, index) => (
-        <Card key={index} title={item.title} imgUrl={item.image} />
+        <Card
+          key={index}
+          title={item.title}
+          imgUrl={item.image}
+          singer={item.singer}
+          genre={item.genre}
+          onPlayClick={() => onPlayClick?.(item)}
+          hasAudioZip={hasAudioZip}
+        />
       ))}
     </div>
   );
