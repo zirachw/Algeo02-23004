@@ -20,7 +20,7 @@ const Card: React.FC<CardProps> = ({
 }) => {
   return (
     // Using max-w-[160px] to control the maximum width of each card
-    <div className="w-full max-w-[210px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
+    <div className="w-full max-w-[210px] max-h-[400px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
       {/* The image container maintains aspect ratio */}
       <div
         className="aspect-square w-full bg-cover bg-center relative"

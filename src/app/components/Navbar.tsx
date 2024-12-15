@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <div className="w-full px-6 pt-8 pb-4 flex justify-between items-center bg-gray-100 backdrop-blur-sm">
+    <div className="w-full px-6 pt-8 pb-4 z-20 flex justify-between items-center bg-gray-100 backdrop-blur-sm">
       {/* Left section containing view switches and microphone */}
       <div className="flex space-x-4 items-center">
         {/* Image View Toggle Button */}

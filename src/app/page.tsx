@@ -15,19 +15,20 @@ const HomePage: React.FC = () => {
   );
 
   // File presence tracking
-  const [hasMapper, setHasMapper] = useState<boolean>(false);
-  const [hasAudioZip, setHasAudioZip] = useState<boolean>(false);
-  const [hasImageZip, setHasImageZip] = useState<boolean>(false);
+  const [hasMapper, setHasMapper] = useState<boolean>(true);
+  const [hasAudioZip, setHasAudioZip] = useState<boolean>(true);
+  const [hasImageZip, setHasImageZip] = useState<boolean>(true);
 
   // Media and player states
   const [lastUploadedMediaType, setLastUploadedMediaType] = useState<
     "audio" | "image" | null
   >(null);
-  const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(false);
+  const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(true);
   const [currentSong, setCurrentSong] = useState<{
     title: string;
     image: string;
     singer: string;
+    audio: string;
   } | null>(null);
 
   // Search functionality
@@ -106,6 +107,7 @@ const HomePage: React.FC = () => {
     title: string;
     image: string;
     singer: string;
+    audio: string;
   }) => {
     setCurrentSong(song);
     setShowAudioPlayer(true);
@@ -114,6 +116,7 @@ const HomePage: React.FC = () => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
+
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -129,7 +132,7 @@ const HomePage: React.FC = () => {
         onPlayClick={handlePlayClick}
       />
 
-      <div className="flex-1 flex flex-col h-screen">
+      <div className="flex-1 flex flex-col">
         <Navbar
           currentView={currentView}
           onSwitch={handleSwitch}
@@ -139,7 +142,7 @@ const HomePage: React.FC = () => {
           isUploadEnabled={isContentReady}
           isMicEnabled={hasAudioZip && lastUploadedMediaType === "audio"}
           lastUploadedMediaType={lastUploadedMediaType}
-          onSearch={handleSearch}
+          onSearch={handleSearch} 
         />
 
         {isContentReady ? (
