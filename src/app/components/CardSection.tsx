@@ -6,22 +6,40 @@ import Pagination from "./Pagination";
 import songData from "../../../test/mapper.json";
 
 const ITEMS_PER_PAGE = 12;
+interface Song {
+  song: string;
+  singer: string;
+  album: string;
+  genre: string;
+  audio: string;
+}
+
+// Define the interface for the similarData prop
+interface SimilarData {
+  matching_results: Song[];
+}
 
 interface CardSectionProps {
+  similarData: SimilarData | null;
   uploadedFile: File | null;
   searchQuery: string;
   onPlayClick: (song: { title: string; image: string; singer: string; audio: string}) => void;
-  hasAudioZip: boolean;
+  AudioZip: File | null;
 }
 
 const CardSection: React.FC<CardSectionProps> = ({
+  similarData,
   searchQuery,
   onPlayClick,
-  hasAudioZip,
+  AudioZip,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-
-  const filteredSongs = songData.songs.filter(
+  const Songs = similarData ? similarData.matching_results : songData.songs;
+  
+  console.log("this is Songs: ",Songs);
+  console.log("this is similarData: ",similarData);
+  if (similarData) console.log("this is similarData.matching_results: ", similarData.matching_results);
+  const filteredSongs = Songs.filter(
     (song) =>
       song.song.toLowerCase().includes(searchQuery.toLowerCase()) ||
       song.singer.toLowerCase().includes(searchQuery.toLowerCase())
@@ -45,7 +63,7 @@ const CardSection: React.FC<CardSectionProps> = ({
     singer: string;
     genre: string;
   }) => {
-    if (hasAudioZip && songData && songData.title) {
+    if (AudioZip && songData && songData.title) {
       onPlayClick({
         title: songData.title,
         image: songData.image,
@@ -65,7 +83,7 @@ const CardSection: React.FC<CardSectionProps> = ({
         <CardList
           data={currentData}
           onPlayClick={handleCardPlay}
-          hasAudioZip={hasAudioZip}
+          AudioZip={AudioZip}
         />
       </div>
       <div>

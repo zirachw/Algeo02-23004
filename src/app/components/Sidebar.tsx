@@ -6,9 +6,9 @@ import Form from "./Form";
 interface SideBarProps {
   onDatabaseFileUpload: (file: File, type: "mapper" | "audio" | "image") => void;
   onContentFileUpload: (file: File) => void;
-  hasMapper: boolean;
-  hasAudioZip: boolean;
-  hasImageZip: boolean;
+  Mapper: File | null;
+  AudioZip: File | null;
+  ImageZip: File | null;
   uploadedPreviewFile: File | null;
   currentSong: { title: string; image: string; singer: string } | null;
   onPlayClick?: (song: {
@@ -22,9 +22,9 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({
   onDatabaseFileUpload,
   onContentFileUpload,
-  hasMapper,
-  hasAudioZip,
-  hasImageZip,
+  Mapper,
+  AudioZip,
+  ImageZip,
   uploadedPreviewFile,
   onPlayClick,
 }) => {
@@ -66,11 +66,11 @@ const SideBar: React.FC<SideBarProps> = ({
   };
 
   const handleUploadClick = () => {
-    if (!hasMapper) {
+    if (!Mapper) {
       alert("Please upload mapper.json first using the Mapper button below");
       return;
     }
-    if (!hasAudioZip && !hasImageZip) {
+    if (!AudioZip && !ImageZip) {
       alert("Please upload either an audio ZIP or image ZIP file first");
       return;
     }
@@ -85,7 +85,7 @@ const SideBar: React.FC<SideBarProps> = ({
       return;
     }
 
-    if (!hasMapper) {
+    if (!Mapper) {
       alert("Please upload mapper.json first");
       return;
     }
@@ -106,11 +106,11 @@ const SideBar: React.FC<SideBarProps> = ({
 
   const getCurrentAllowedFormats = () => {
     if (uploadType === "content") {
-      if (hasAudioZip && hasImageZip) {
+      if (AudioZip && ImageZip) {
         return [...allowedFormats.content.audio, ...allowedFormats.content.image];
       }
-      if (hasAudioZip) return allowedFormats.content.audio;
-      if (hasImageZip) return allowedFormats.content.image;
+      if (AudioZip) return allowedFormats.content.audio;
+      if (ImageZip) return allowedFormats.content.image;
       return [];
     }
     return allowedFormats[uploadType];
@@ -184,9 +184,9 @@ const SideBar: React.FC<SideBarProps> = ({
         <div className="flex justify-center border-b border-[#DBDBDB]/20 pb-6">
           <button
             onClick={handleUploadClick}
-            disabled={!hasMapper || (!hasAudioZip && !hasImageZip)}
+            disabled={!Mapper || (!AudioZip && !ImageZip)}
             className={`w-[200px] h-[40px] ${
-              hasMapper && (hasAudioZip || hasImageZip)
+              Mapper && (AudioZip || ImageZip)
                 ? "bg-[#DBDBDB] hover:bg-gray-300"
                 : "bg-gray-500 cursor-not-allowed"
             } text-black rounded-lg text-sm transition-colors`}
@@ -224,9 +224,9 @@ const SideBar: React.FC<SideBarProps> = ({
             <div className="flex items-center gap-4">
               <button
                 onClick={() => handleDatabaseClick("image")}
-                disabled={!hasMapper}
+                disabled={!Mapper}
                 className={`w-20 h-8 ${
-                  hasMapper
+                  Mapper
                     ? "bg-[#DBDBDB] hover:bg-gray-300"
                     : "bg-gray-500 cursor-not-allowed"
                 } text-black rounded-lg text-sm`}
@@ -241,9 +241,9 @@ const SideBar: React.FC<SideBarProps> = ({
             <div className="flex items-center gap-4">
               <button
                 onClick={() => handleDatabaseClick("audio")}
-                disabled={!hasMapper}
+                disabled={!Mapper}
                 className={`w-20 h-8 ${
-                  hasMapper
+                  Mapper
                     ? "bg-[#DBDBDB] hover:bg-gray-300"
                     : "bg-gray-500 cursor-not-allowed"
                 } text-black rounded-lg text-sm`}
@@ -259,8 +259,8 @@ const SideBar: React.FC<SideBarProps> = ({
       </div>
 
       <Form
-        hasAudioZip={hasAudioZip}
-        hasImageZip={hasImageZip}
+        AudioZip={AudioZip}
+        ImageZip={ImageZip}
         isOpen={showForm}
         onClose={() => setShowForm(false)}
         onFileUpload={uploadType === "content" ? onContentFileUpload : handleDatabaseUpload}

@@ -4,7 +4,7 @@ import * as Tone from "tone";
 import { Midi } from "@tonejs/midi";
 
 interface AudioPlayerProps {
-  isEnabled: boolean;
+  isEnabled: File | null;
   currentSong: {
     title: string;
     image: string;

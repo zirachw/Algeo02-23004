@@ -5,6 +5,18 @@ import SideBar from "./components/Sidebar";
 import AudioPlayer from "./components/AudioPlayer";
 import CardSection from "./components/CardSection";
 import Navbar from "./components/Navbar";
+interface Song {
+  song: string;
+  singer: string;
+  album: string;
+  genre: string;
+  audio: string;
+}
+
+// Define the interface for the similarData prop
+interface SimilarData {
+  matching_results: Song[];
+}
 
 const HomePage: React.FC = () => {
   // Core view and file states
@@ -12,9 +24,11 @@ const HomePage: React.FC = () => {
   const [uploadedPreviewFile, setUploadedPreviewFile] = useState<File | null>(null);
 
   // File presence tracking
-  const [hasMapper, setHasMapper] = useState<boolean>(false);
-  const [hasAudioZip, setHasAudioZip] = useState<boolean>(false);
-  const [hasImageZip, setHasImageZip] = useState<boolean>(false);
+  const [Mapper, setMapper] = useState<File | null>(null);
+  const [AudioZip, setAudioZip] = useState<File | null>(null);
+  const [ImageZip, setImageZip] = useState<File | null>(null);
+
+  const [similarData, setSimilarData] = useState<SimilarData | null>(null);
 
   // Upload button and navigation states
   const [uploadedFromUploadButton, setUploadedFromUploadButton] = useState<boolean>(false);
@@ -32,7 +46,7 @@ const HomePage: React.FC = () => {
   // Search functionality
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const isContentReady = hasMapper && (hasAudioZip || hasImageZip);
+  const isContentReady = Mapper && (AudioZip || ImageZip);
 
   const isAudioFile = (file: File): boolean => {
     const fileType = file.type.toLowerCase();
@@ -53,14 +67,14 @@ const HomePage: React.FC = () => {
     );
   };
 
-  const handleDatabaseFileUpload = (file: File, type: "mapper" | "audio" | "image") => {
+  const handleDatabaseFileUpload = async (file: File, type: "mapper" | "audio" | "image") => {
     setUploadedFile(file);
     const fileExt = file.name.toLowerCase().split(".").pop() || "";
-
+  
     if (type === "mapper" && fileExt === "json") {
-      setHasMapper(true);
-      setHasAudioZip(false);
-      setHasImageZip(false);
+      setMapper(file);
+      setAudioZip(null);
+      setImageZip(null);
       setLastUploadedMediaType(null);
       setUploadedPreviewFile(null);
       setShowAudioPlayer(false);
@@ -68,28 +82,87 @@ const HomePage: React.FC = () => {
       setUploadedFromUploadButton(false);
       return;
     }
-
+  
     if (type === "audio" && fileExt === "zip") {
-      setHasAudioZip(true);
+      setAudioZip(file);
       setShowAudioPlayer(false);
       return;
     }
-
+  
     if (type === "image" && fileExt === "zip") {
-      setHasImageZip(true);
+      try {
+        // Create a FormData object for the file
+        const formData = new FormData();
+        if (Mapper)  {formData.append("mapper_file", Mapper)}
+        if (file) {formData.append("file", file)}
+        
+        console.log(Mapper); // Should show File object with name, size, and type
+        console.log(file); // Should show File object with name, size, and type
+
+        // Send POST request to the /upload-dataset endpoint
+        const response = await fetch("http://127.0.0.1:8000/upload-dataset", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "enctype": "multipart/form-data",
+          }
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Dataset uploaded successfully:", result);
+          setImageZip(file);
+        } else {
+          const error = await response.json();
+          console.error("Error uploading dataset:", error);
+        }
+      } catch (error) {
+        console.error("Failed to upload dataset:", error);
+      }
       return;
     }
-  };
+  };  
 
-  const handleContentFileUpload = (file: File) => {
-    setUploadedFile(file);
-    setUploadedPreviewFile(file);
+  const handleContentFileUpload = async (file: File) => {
+    
     setUploadedFromUploadButton(true);
 
     if (isAudioFile(file)) {
       setLastUploadedMediaType("audio");
     } else if (isImageFile(file)) {
       setLastUploadedMediaType("image");
+      try {
+        // Create a FormData object for the file
+        const formData = new FormData();
+        
+        if (file) {
+          formData.append("file", file);
+        }
+
+        console.log("anjay", file); // Should show File object with name, size, and type
+
+        // Send POST request to the /upload-dataset endpoint
+        const response = await fetch("http://127.0.0.1:8000/search", {
+          method: "POST",
+          body: formData,
+          // headers: {
+          //   "enctype": "multipart/form-data",
+          // }
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Dataset queried successfully:", result);
+          setSimilarData(result);
+          setUploadedFile(file);
+          setUploadedPreviewFile(file);
+        } else {
+          const error = await response.json();
+          console.error("Error uploading dataset:", error);
+        }
+      } catch (error) {
+        console.error("Failed to upload dataset:", error);
+      }
     }
   };
 
@@ -113,9 +186,9 @@ const HomePage: React.FC = () => {
       <SideBar
         onDatabaseFileUpload={handleDatabaseFileUpload}
         onContentFileUpload={handleContentFileUpload}
-        hasMapper={hasMapper}
-        hasAudioZip={hasAudioZip}
-        hasImageZip={hasImageZip}
+        Mapper={Mapper}
+        AudioZip={AudioZip}
+        ImageZip={ImageZip}
         uploadedPreviewFile={uploadedPreviewFile}
         currentSong={currentSong}
         onPlayClick={handlePlayClick}
@@ -124,8 +197,8 @@ const HomePage: React.FC = () => {
       <div className="w-4/5 flex flex-col">
         <Navbar
           uploadedFile={uploadedFile}
-          hasAudioZip={hasAudioZip}
-          hasImageZip={hasImageZip}
+          AudioZip={AudioZip}
+          ImageZip={ImageZip}
           isUploadEnabled={isContentReady}
           lastUploadedMediaType={lastUploadedMediaType}
           onSearch={handleSearch}
@@ -138,10 +211,11 @@ const HomePage: React.FC = () => {
             <div className="flex-1 flex items-center px-8">
               <div className="w-full">
                 <CardSection
+                  similarData={similarData}
                   uploadedFile={uploadedFile}
                   searchQuery={searchQuery}
                   onPlayClick={handlePlayClick}
-                  hasAudioZip={hasAudioZip}
+                  AudioZip={AudioZip}
                 />
               </div>
             </div>
@@ -149,7 +223,7 @@ const HomePage: React.FC = () => {
             {showAudioPlayer && currentSong && (
               <div className="bg-[#303030]">
                 <AudioPlayer
-                  isEnabled={hasAudioZip}
+                  isEnabled={AudioZip}
                   currentSong={currentSong}
                 />
               </div>
