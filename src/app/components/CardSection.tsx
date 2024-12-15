@@ -10,7 +10,7 @@ const ITEMS_PER_PAGE = 12;
 interface CardSectionProps {
   uploadedFile: File | null;
   searchQuery: string;
-  onPlayClick: (song: { title: string; image: string; singer: string }) => void;
+  onPlayClick: (song: { title: string; image: string; singer: string; audio: string}) => void;
   hasAudioZip: boolean;
 }
 
@@ -36,6 +36,7 @@ const CardSection: React.FC<CardSectionProps> = ({
       image: `/images/${song.album}`,
       singer: song.singer,
       genre: song.genre,
+      audio: `audio/${song.audio}`,
     }));
 
   const handleCardPlay = (songData: {
@@ -49,6 +50,7 @@ const CardSection: React.FC<CardSectionProps> = ({
         title: songData.title,
         image: songData.image,
         singer: songData.singer,
+        audio: "audio/temp.mid",
       });
     }
   };

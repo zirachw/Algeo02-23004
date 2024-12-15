@@ -15,6 +15,7 @@ interface SideBarProps {
     title: string;
     image: string;
     singer: string;
+    audio: string;
   }) => void;
 }
 
@@ -144,6 +145,7 @@ const SideBar: React.FC<SideBarProps> = ({
                             title: uploadedPreviewFile.name,
                             image: "/default-audio-image.jpg",
                             singer: "Unknown Artist",
+                            audio: "audio/temp.mid"
                           });
                         }}
                       >
