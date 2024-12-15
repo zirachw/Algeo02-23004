@@ -61,6 +61,7 @@ const HomePage: React.FC = () => {
       setHasAudioZip(false);
       setHasImageZip(false);
       setLastUploadedMediaType(null);
+      setUploadedPreviewFile(null);
       setShowAudioPlayer(false);
       setCurrentSong(null);
       setUploadedFromUploadButton(false);
@@ -126,7 +127,7 @@ const HomePage: React.FC = () => {
           lastUploadedMediaType={lastUploadedMediaType}
           onSearch={handleSearch}
           canSearchByImage={lastUploadedMediaType === "image"}
-        canSearchByAudio={lastUploadedMediaType === "audio"}
+          canSearchByAudio={lastUploadedMediaType === "audio"}
         />
 
         {isContentReady ? (
@@ -153,8 +154,8 @@ const HomePage: React.FC = () => {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <h2 className="text-xl font-medium mb-2">
+            <div className="text-center text-black">
+              <h2 className="text-4xl font-medium mb-2">
                 Please upload required files
               </h2>
               <p>

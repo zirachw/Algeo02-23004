@@ -52,6 +52,7 @@ const SideBar: React.FC<SideBarProps> = ({
     if (uploadType === 'mapper') {
       setMapperFilename(file.name);
       onDatabaseFileUpload(file, "mapper");
+      
     } else if (uploadType === 'audio') {
       setAudioFilename(file.name);
       setAudioSize(formatFileSize(totalSize || file.size));
