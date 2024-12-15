@@ -192,6 +192,7 @@ const HomePage: React.FC = () => {
         uploadedPreviewFile={uploadedPreviewFile}
         currentSong={currentSong}
         onPlayClick={handlePlayClick}
+        isUploaded={uploadedFromUploadButton}
       />
 
       <div className="w-4/5 flex flex-col">
