@@ -1,6 +1,7 @@
 // Navbar.tsx
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import VoiceRecorderForm from "./RecordForm";
 
 // Define the properties for the Navbar component
 // Includes a new optional isMicEnabled prop with a default of false
@@ -15,6 +16,7 @@ interface NavbarProps {
   canSearchByAudio: boolean;
 }
 
+
 const Navbar: React.FC<NavbarProps> = ({
   AudioZip,
   lastUploadedMediaType,
@@ -22,12 +24,23 @@ const Navbar: React.FC<NavbarProps> = ({
   canSearchByImage,
   canSearchByAudio,
 }) => {
+  const [isRecorderOpen, setRecorderOpen] = useState(false);
+
+  const handleOpenRecorder = () => setRecorderOpen(true);
+  const handleCloseRecorder = () => setRecorderOpen(false);
+
+  const handleConfirmRecording = (audioBlob: Blob) => {
+    // Handle the recorded audio blob (e.g., upload it or process it)
+    console.log("Audio recorded:", audioBlob);
+  };
+
   // Handle search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onSearch?.(event.target.value);
   };
 
   return (
+    <>
     <div className="w-full px-12 pt-8 pb-4 flex justify-between items-center bg-gray-100 backdrop-blur-sm">
       <div className="flex space-x-4 items-center">
         {/* Start Search by Image button */}
@@ -64,7 +77,8 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Search by Microphone button */}
         <button
-          disabled={!AudioZip && lastUploadedMediaType === null}
+          onClick={handleOpenRecorder}
+          disabled={!hasAudioZip && lastUploadedMediaType === null}
           className={`p-2 rounded-full transition-colors duration-200 ${
             AudioZip && lastUploadedMediaType === null
               ? "text-black hover:bg-gray-100 cursor-pointer"
@@ -123,6 +137,12 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
     </div>
+    <VoiceRecorderForm
+        isOpen={isRecorderOpen}
+        onClose={handleCloseRecorder}
+        onConfirm={handleConfirmRecording}
+      />
+      </>
   );
 };
 
