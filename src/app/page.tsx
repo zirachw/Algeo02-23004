@@ -194,7 +194,7 @@ const HomePage: React.FC = () => {
         onPlayClick={handlePlayClick}
       />
 
-      <div className="flex-1 flex flex-col">
+      <div className="w-4/5 flex flex-col">
         <Navbar
           uploadedFile={uploadedFile}
           AudioZip={AudioZip}

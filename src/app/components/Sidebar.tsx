@@ -117,10 +117,10 @@ const SideBar: React.FC<SideBarProps> = ({
   };
 
   return (
-    <div className="w-80 bg-gradient-to-b from-[#535353] to-[#303030] flex flex-col">
+    <div className="w-1/5 bg-gradient-to-b from-[#535353] to-[#303030] flex flex-col">
 
-      <div className="flex-1 flex flex-col justify-center px-8 space-y-8">
-        <h1 className="pl-10 pt-5 text-4xl text-[#DBDBDB]">Melodia.</h1>
+      <div className="flex-1 flex flex-col justify-normal items-center px-8 space-y-8">
+        <h1 className="text-4xl text-[#DBDBDB]">Melodia.</h1>
         {/* Preview Card - Shows currently uploaded content file */}
         <div className="flex justify-center">
           <div className="w-[200px] h-[240px] bg-[#DBDBDB] rounded-lg overflow-hidden">
@@ -195,7 +195,7 @@ const SideBar: React.FC<SideBarProps> = ({
           </button>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           <h2 className="text-[28px] text-[#DBDBDB] font-light">
             Information:
           </h2>
