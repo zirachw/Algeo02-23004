@@ -22,11 +22,28 @@ from fastapi.exceptions import HTTPException
 # Initialize Rich console
 console = Console()
 
+
+# Get the absolute path of the current file (main.py)
+current_file_path = os.path.abspath(__file__)
+
+# Navigate up to the root directory (one level above src)
+root_directory = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(current_file_path))),'public')
+
+# Define the path for temp_extracted in the root directory
+temp_extracted_path = os.path.join(root_directory, 'temp_extracted')
+
+# Create the temp_extracted directory if it does not exist
+if not os.path.exists(temp_extracted_path):
+    os.makedirs(temp_extracted_path)
+
+print(f"'temp_extracted' created at: {temp_extracted_path}")
+
 class DatasetLoader:
     def __init__(self, test_dir: str = "../../test"):
         self.test_dir = Path(test_dir)
-        self.temp_dir = Path("temp_extracted")
-        self.images_dir = Path((os.getcwd())) / self.temp_dir / "images"
+        
+        self.temp_dir = Path(temp_extracted_path)
+        self.images_dir = self.temp_dir / "images"
         self.mapper_data = None
         
         # Add cleanup on initialization

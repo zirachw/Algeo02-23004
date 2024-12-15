@@ -51,10 +51,10 @@ const CardSection: React.FC<CardSectionProps> = ({
     .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
     .map((song) => ({
       title: song.song,
-      image: `/images/${song.album}`,
+      image: `${song.album}`,
       singer: song.singer,
       genre: song.genre,
-      audio: `audio/${song.audio}`,
+      audio: `${song.audio}`,
     }));
 
   const handleCardPlay = (songData: {
