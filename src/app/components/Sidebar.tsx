@@ -11,6 +11,7 @@ interface SideBarProps {
   ImageZip: File | null;
   uploadedPreviewFile: File | null;
   currentSong: { title: string; image: string; singer: string } | null;
+  isUploaded: boolean;
   onPlayClick?: (song: {
     title: string;
     image: string;
@@ -26,6 +27,7 @@ const SideBar: React.FC<SideBarProps> = ({
   AudioZip,
   ImageZip,
   uploadedPreviewFile,
+  isUploaded,
   onPlayClick,
 }) => {
   const [showForm, setShowForm] = useState(false);
@@ -35,8 +37,6 @@ const SideBar: React.FC<SideBarProps> = ({
   const [mapperFilename, setMapperFilename] = useState<string>("");
   const [audioFilename, setAudioFilename] = useState<string>("");
   const [imageFilename, setImageFilename] = useState<string>("");
-  const [isUploaded, setIsUploaded] = useState(false);
-
 
   const isAudioFile = (file: File): boolean => {
     const fileExt = file.name.toLowerCase().split(".").pop() || "";
@@ -200,7 +200,7 @@ const SideBar: React.FC<SideBarProps> = ({
             {/* Tombol Search */}
             <button
               onClick={() => alert("Search functionality triggered!")}
-              disabled={!isUploaded} // nanti tambahin ya isUploadednya true kalo udah upload
+              disabled={!isUploaded}
               className={`w-[100px] h-[40px] ${
                 isUploaded
                   ? "bg-[#DBDBDB] hover:bg-gray-300"
