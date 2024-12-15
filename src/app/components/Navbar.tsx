@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <div className="w-full px-6 pt-8 pb-4 flex justify-between items-center bg-gray-100 backdrop-blur-sm">
+    <div className="w-full px-12 pt-8 pb-4 flex justify-between items-center bg-gray-100 backdrop-blur-sm">
       <div className="flex space-x-4 items-center">
         {/* Start Search by Image button */}
         <button
