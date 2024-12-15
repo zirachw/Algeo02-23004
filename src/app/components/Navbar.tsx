@@ -78,7 +78,7 @@ const Navbar: React.FC<NavbarProps> = ({
         {/* Search by Microphone button */}
         <button
           onClick={handleOpenRecorder}
-          disabled={!hasAudioZip && lastUploadedMediaType === null}
+          disabled={!AudioZip && lastUploadedMediaType === null}
           className={`p-2 rounded-full transition-colors duration-200 ${
             AudioZip && lastUploadedMediaType === null
               ? "text-black hover:bg-gray-100 cursor-pointer"

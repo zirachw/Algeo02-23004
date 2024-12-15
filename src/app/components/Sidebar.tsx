@@ -35,6 +35,8 @@ const SideBar: React.FC<SideBarProps> = ({
   const [mapperFilename, setMapperFilename] = useState<string>("");
   const [audioFilename, setAudioFilename] = useState<string>("");
   const [imageFilename, setImageFilename] = useState<string>("");
+  const [isUploaded, setIsUploaded] = useState(false);
+
 
   const isAudioFile = (file: File): boolean => {
     const fileExt = file.name.toLowerCase().split(".").pop() || "";
@@ -182,17 +184,32 @@ const SideBar: React.FC<SideBarProps> = ({
         </div>
 
         <div className="flex justify-center border-b border-[#DBDBDB]/20 pb-6">
-          <button
-            onClick={handleUploadClick}
-            disabled={!Mapper || (!AudioZip && !ImageZip)}
-            className={`w-[200px] h-[40px] ${
-              Mapper && (AudioZip || ImageZip)
-                ? "bg-[#DBDBDB] hover:bg-gray-300"
-                : "bg-gray-500 cursor-not-allowed"
-            } text-black rounded-lg text-sm transition-colors`}
-          >
-            Upload
-          </button>
+          <div className="flex space-x-4"> 
+            <button
+              onClick={handleUploadClick}
+              disabled={!Mapper || (!AudioZip && !ImageZip)}
+              className={`w-[100px] h-[40px] ${
+                Mapper && (AudioZip || ImageZip)
+                  ? "bg-[#DBDBDB] hover:bg-gray-300"
+                  : "bg-gray-500 cursor-not-allowed"
+              } text-black rounded-lg text-sm transition-colors`}
+            >
+              Upload
+            </button>
+
+            {/* Tombol Search */}
+            <button
+              onClick={() => alert("Search functionality triggered!")}
+              disabled={!isUploaded} // nanti tambahin ya isUploadednya true kalo udah upload
+              className={`w-[100px] h-[40px] ${
+                isUploaded
+                  ? "bg-[#DBDBDB] hover:bg-gray-300"
+                  : "bg-gray-500 cursor-not-allowed"
+              } text-black rounded-lg text-sm transition-colors`}
+            >
+              Search
+            </button>
+          </div>
         </div>
 
         <div className="space-y-4">
