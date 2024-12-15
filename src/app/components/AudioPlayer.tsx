@@ -116,7 +116,7 @@ export default function AudioPlayer({
         <div className="w-10 h-10 bg-gray-200 flex-shrink-0">
           {currentSong.image && (
             <img
-              src={currentSong.image}
+              src={`/temp_extracted/images/${currentSong.image}`}
               alt={currentSong.title}
               className="w-full h-full object-cover"
             />

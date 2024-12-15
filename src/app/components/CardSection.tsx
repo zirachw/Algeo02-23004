@@ -62,13 +62,14 @@ const CardSection: React.FC<CardSectionProps> = ({
     image: string;
     singer: string;
     genre: string;
+    audio: string;
   }) => {
     if (AudioZip && songData && songData.title) {
       onPlayClick({
         title: songData.title,
         image: songData.image,
         singer: songData.singer,
-        audio: "audio/temp.mid",
+        audio: songData.audio,
       });
     }
   };
