@@ -8,7 +8,6 @@ interface CardProps {
   genre: string;
   onPlayClick?: () => void;
   hasAudioZip: boolean;
-  currentView: "audio" | "image";
 }
 
 const Card: React.FC<CardProps> = ({
@@ -18,9 +17,8 @@ const Card: React.FC<CardProps> = ({
   genre,
   onPlayClick,
   hasAudioZip,
-  currentView,
 }) => {
-  const showPlayButton = hasAudioZip && currentView === "audio";
+  const showPlayButton = hasAudioZip;
 
   return (
     <div className="w-full max-w-[210px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">

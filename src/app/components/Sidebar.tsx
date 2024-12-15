@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Form from "./Form";
 
 interface SideBarProps {
-  currentView: "audio" | "image";
   onDatabaseFileUpload: (file: File, type: "mapper" | "audio" | "image") => void;
   onContentFileUpload: (file: File) => void;
   hasMapper: boolean;
@@ -20,7 +19,6 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({
-  currentView,
   onDatabaseFileUpload,
   onContentFileUpload,
   hasMapper,
@@ -99,7 +97,7 @@ const SideBar: React.FC<SideBarProps> = ({
     audio: [".zip"],
     image: [".zip"],
     content: {
-      audio: [".mp3", ".wav", ".ogg", ".m4a"],
+      audio: [".mid", ".midi"],
       image: [".jpg", ".jpeg", ".png"]
     }
   };
@@ -257,6 +255,8 @@ const SideBar: React.FC<SideBarProps> = ({
       </div>
 
       <Form
+        hasAudioZip={hasAudioZip}
+        hasImageZip={hasImageZip}
         isOpen={showForm}
         onClose={() => setShowForm(false)}
         onFileUpload={uploadType === "content" ? onContentFileUpload : handleDatabaseUpload}

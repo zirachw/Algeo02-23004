@@ -8,7 +8,6 @@ import Navbar from "./components/Navbar";
 
 const HomePage: React.FC = () => {
   // Core view and file states
-  const [currentView, setCurrentView] = useState<"audio" | "image">("audio");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadedPreviewFile, setUploadedPreviewFile] = useState<File | null>(null);
 
@@ -19,7 +18,6 @@ const HomePage: React.FC = () => {
 
   // Upload button and navigation states
   const [uploadedFromUploadButton, setUploadedFromUploadButton] = useState<boolean>(false);
-  const [lastUploadedContentExt, setLastUploadedContentExt] = useState<string | null>(null);
   const [lastUploadedMediaType, setLastUploadedMediaType] = useState<"audio" | "image" | null>(null);
 
   // Media and player states
@@ -34,23 +32,6 @@ const HomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const isContentReady = hasMapper && (hasAudioZip || hasImageZip);
-
-  // Validation conditions for navigation
-  const canSwitchToAudio = Boolean(
-    isContentReady && 
-    hasAudioZip && 
-    uploadedFromUploadButton && 
-    lastUploadedContentExt && 
-    ['mid', 'midi'].includes(lastUploadedContentExt)
-  );
-
-  const canSwitchToImage = Boolean(
-    isContentReady && 
-    hasImageZip && 
-    uploadedFromUploadButton && 
-    lastUploadedContentExt && 
-    ['jpg', 'jpeg', 'png'].includes(lastUploadedContentExt)
-  );
 
   const isAudioFile = (file: File): boolean => {
     const fileType = file.type.toLowerCase();
@@ -80,24 +61,20 @@ const HomePage: React.FC = () => {
       setHasAudioZip(false);
       setHasImageZip(false);
       setLastUploadedMediaType(null);
-      setCurrentView("audio");
       setShowAudioPlayer(false);
       setCurrentSong(null);
       setUploadedFromUploadButton(false);
-      setLastUploadedContentExt(null);
       return;
     }
 
     if (type === "audio" && fileExt === "zip") {
       setHasAudioZip(true);
-      setLastUploadedMediaType("audio");
       setShowAudioPlayer(false);
       return;
     }
 
     if (type === "image" && fileExt === "zip") {
       setHasImageZip(true);
-      setLastUploadedMediaType("image");
       return;
     }
   };
@@ -107,21 +84,10 @@ const HomePage: React.FC = () => {
     setUploadedPreviewFile(file);
     setUploadedFromUploadButton(true);
 
-    const fileExt = file.name.toLowerCase().split(".").pop() || "";
-    setLastUploadedContentExt(fileExt);
-
     if (isAudioFile(file)) {
       setLastUploadedMediaType("audio");
-      setCurrentView("audio");
     } else if (isImageFile(file)) {
       setLastUploadedMediaType("image");
-      setCurrentView("image");
-    }
-  };
-
-  const handleSwitch = (view: "audio" | "image") => {
-    if ((view === "audio" && canSwitchToAudio) || (view === "image" && canSwitchToImage)) {
-      setCurrentView(view);
     }
   };
 
@@ -141,7 +107,6 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <SideBar
-        currentView={currentView}
         onDatabaseFileUpload={handleDatabaseFileUpload}
         onContentFileUpload={handleContentFileUpload}
         hasMapper={hasMapper}
@@ -154,16 +119,14 @@ const HomePage: React.FC = () => {
 
       <div className="flex-1 flex flex-col h-screen">
         <Navbar
-          currentView={currentView}
-          onSwitch={handleSwitch}
           uploadedFile={uploadedFile}
           hasAudioZip={hasAudioZip}
           hasImageZip={hasImageZip}
           isUploadEnabled={isContentReady}
           lastUploadedMediaType={lastUploadedMediaType}
           onSearch={handleSearch}
-          canSwitchToAudio={canSwitchToAudio}
-          canSwitchToImage={canSwitchToImage}
+          canSearchByImage={lastUploadedMediaType === "image"}
+        canSearchByAudio={lastUploadedMediaType === "audio"}
         />
 
         {isContentReady ? (
@@ -171,8 +134,6 @@ const HomePage: React.FC = () => {
             <div className="flex-1 flex items-center px-8">
               <div className="w-full">
                 <CardSection
-                  currentView={currentView}
-                  onSwitch={handleSwitch}
                   uploadedFile={uploadedFile}
                   searchQuery={searchQuery}
                   onPlayClick={handlePlayClick}

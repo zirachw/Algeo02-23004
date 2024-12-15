@@ -8,8 +8,8 @@ interface FormProps {
   onFileUpload: (file: File, totalSize?: number) => void;
   uploadType: "mapper" | "audio" | "image" | "content";
   allowedFormats: string[];
-  hasAudioZip?: boolean;
-  hasImageZip?: boolean;
+  hasAudioZip: boolean;
+  hasImageZip: boolean;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -303,7 +303,10 @@ const Form: React.FC<FormProps> = ({
                     Choose a file or drag & drop it here
                   </p>
                   <p className="mt-2 text-m text-gray-700">
-                    {getUploadDescription()} (Max 10MB)
+                    {getUploadDescription()}
+                  </p>
+                  <p className="mt-2 text-m text-gray-700">
+                   ~ Max 10MB ~
                   </p>
                   <input
                     type="file"

@@ -5,30 +5,22 @@ import React from "react";
 // Define the properties for the Navbar component
 // Includes a new optional isMicEnabled prop with a default of false
 interface NavbarProps {
-  currentView: "audio" | "image";
-  onSwitch: (view: "audio" | "image") => void;
   uploadedFile: File | null;
   hasAudioZip: boolean;
   hasImageZip: boolean;
   isUploadEnabled: boolean;
-  isMicEnabled?: boolean; // Made optional with a default of false
   lastUploadedMediaType: "audio" | "image" | null;
   onSearch?: (query: string) => void;
-  canSwitchToAudio: boolean;
-  canSwitchToImage: boolean;
+  canSearchByImage: boolean;
+  canSearchByAudio: boolean;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
-  currentView,
-  onSwitch,
   hasAudioZip,
-  hasImageZip,
-  isUploadEnabled,
-  isMicEnabled = false, // Default to false if not provided
   lastUploadedMediaType,
   onSearch,
-  canSwitchToAudio,
-  canSwitchToImage,
+  canSearchByImage,
+  canSearchByAudio,
 }) => {
   // Handle search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,45 +30,43 @@ const Navbar: React.FC<NavbarProps> = ({
   return (
     <div className="w-full px-6 pt-8 pb-4 flex justify-between items-center bg-gray-100 backdrop-blur-sm">
       <div className="flex space-x-4 items-center">
-        {/* Image view switch button */}
+        {/* Start Search by Image button */}
         <button
-          onClick={() => onSwitch("image")}
           className={`px-4 py-1.5 w-24 rounded-lg ring-1 ring-gray-300 transform transition-all duration-300 ease-in-out ${
-            currentView === "image" && isUploadEnabled
+            lastUploadedMediaType === "image"
               ? "bg-[#DBDBDB]"
               : "bg-white"
           } ${
-            canSwitchToImage
+            canSearchByImage
               ? "text-black hover:bg-gray-100 cursor-pointer"
               : "text-gray-400 cursor-not-allowed"
           }`}
-          disabled={!canSwitchToImage}
+          disabled={!canSearchByImage}
         >
           Image
         </button>
 
-        {/* Audio view switch button */}
+        {/* Start Search by Audio button */}
         <button
-          onClick={() => onSwitch("audio")}
           className={`px-4 py-1.5 w-24 rounded-lg ring-1 ring-gray-300 transform transition-all duration-300 ease-in-out ${
-            currentView === "audio" && isUploadEnabled
+            lastUploadedMediaType === "audio"
               ? "bg-[#DBDBDB]"
               : "bg-white"
           } ${
-            canSwitchToAudio
+            canSearchByAudio
               ? "text-black hover:bg-gray-100 cursor-pointer"
               : "text-gray-400 cursor-not-allowed"
           }`}
-          disabled={!canSwitchToAudio}
+          disabled={!canSearchByAudio}
         >
           Audio
         </button>
 
-        {/* Microphone button - now respects isMicEnabled */}
+        {/* Search by Microphone button */}
         <button
-          disabled={!hasAudioZip || !isMicEnabled}
+          disabled={!hasAudioZip}
           className={`p-2 rounded-full transition-colors duration-200 ${
-            hasAudioZip && isMicEnabled
+            hasAudioZip
               ? "text-black hover:bg-gray-100 cursor-pointer"
               : "text-gray-400 cursor-not-allowed"
           }`}
@@ -104,7 +94,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <span className="text-gray-700">Query Time: -</span>
       </div>
 
-      {/* Search input */}
+      {/* Search by Name button */}
       <div className="relative flex items-center">
         <div className="relative">
           <input

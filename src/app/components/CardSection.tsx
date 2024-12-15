@@ -8,8 +8,6 @@ import songData from "../../../test/mapper.json";
 const ITEMS_PER_PAGE = 12;
 
 interface CardSectionProps {
-  currentView: "audio" | "image";
-  onSwitch: (view: "audio" | "image") => void;
   uploadedFile: File | null;
   searchQuery: string;
   onPlayClick: (song: { title: string; image: string; singer: string }) => void;
@@ -17,9 +15,6 @@ interface CardSectionProps {
 }
 
 const CardSection: React.FC<CardSectionProps> = ({
-  currentView,
-  onSwitch,
-  uploadedFile,
   searchQuery,
   onPlayClick,
   hasAudioZip,
@@ -49,7 +44,7 @@ const CardSection: React.FC<CardSectionProps> = ({
     singer: string;
     genre: string;
   }) => {
-    if (hasAudioZip && currentView === "audio" && songData && songData.title) {
+    if (hasAudioZip && songData && songData.title) {
       onPlayClick({
         title: songData.title,
         image: songData.image,
@@ -69,7 +64,6 @@ const CardSection: React.FC<CardSectionProps> = ({
           data={currentData}
           onPlayClick={handleCardPlay}
           hasAudioZip={hasAudioZip}
-          currentView={currentView}
         />
       </div>
       <div>
