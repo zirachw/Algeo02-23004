@@ -1,13 +1,11 @@
 // Sidebar.tsx
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Form from "./Form";
 
-// Define our component's props interface with clear separation of file handling responsibilities
 interface SideBarProps {
-  currentView: "audio" | "image";
-  onDatabaseFileUpload: (file: File) => void; // For system files like mapper.json and zip files
-  onContentFileUpload: (file: File) => void; // For user content files (images, audio)
+  onDatabaseFileUpload: (file: File, type: "mapper" | "audio" | "image") => void;
+  onContentFileUpload: (file: File) => void;
   hasMapper: boolean;
   hasAudioZip: boolean;
   hasImageZip: boolean;
@@ -21,44 +19,27 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({
-  currentView,
   onDatabaseFileUpload,
   onContentFileUpload,
   hasMapper,
   hasAudioZip,
   hasImageZip,
   uploadedPreviewFile,
-  currentSong,
   onPlayClick,
 }) => {
-  // Core UI state
   const [showForm, setShowForm] = useState(false);
-  const [uploadType, setUploadType] = useState<
-    "mapper" | "audio" | "image" | "content"
-  >("mapper");
-
-  // File size tracking state
+  const [uploadType, setUploadType] = useState<"mapper" | "audio" | "image" | "content">("mapper");
   const [audioSize, setAudioSize] = useState<string>("0");
   const [imageSize, setImageSize] = useState<string>("0");
+  const [mapperFilename, setMapperFilename] = useState<string>("");
+  const [audioFilename, setAudioFilename] = useState<string>("");
+  const [imageFilename, setImageFilename] = useState<string>("");
 
-  // Track database files separately from preview files
-  const [databaseFiles, setDatabaseFiles] = useState<{
-    audio?: File;
-    image?: File;
-  }>({});
-
-  // Helper function to identify audio files by type or extension
   const isAudioFile = (file: File): boolean => {
-    const fileType = file.type.toLowerCase();
     const fileExt = file.name.toLowerCase().split(".").pop() || "";
-    return (
-      fileType.startsWith("audio/") ||
-      fileType.startsWith("video/") ||
-      ["mid", "midi", "mp3", "wav", "ogg", "m4a"].includes(fileExt)
-    );
+    return ["mid", "midi", "mp3", "wav", "ogg", "m4a"].includes(fileExt);
   };
 
-  // Formats file sizes into human-readable strings with appropriate units
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -67,41 +48,35 @@ const SideBar: React.FC<SideBarProps> = ({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  // Update size displays whenever database files change
-  useEffect(() => {
-    if (databaseFiles.audio) {
-      setAudioSize(formatFileSize(databaseFiles.audio.size));
+  const handleDatabaseUpload = (file: File, totalSize?: number) => {
+    if (uploadType === 'mapper') {
+      setMapperFilename(file.name);
+      onDatabaseFileUpload(file, "mapper");
+      
+    } else if (uploadType === 'audio') {
+      setAudioFilename(file.name);
+      setAudioSize(formatFileSize(totalSize || file.size));
+      onDatabaseFileUpload(file, "audio");
+    } else if (uploadType === 'image') {
+      setImageFilename(file.name);
+      setImageSize(formatFileSize(totalSize || file.size));
+      onDatabaseFileUpload(file, "image");
     }
-    if (databaseFiles.image) {
-      setImageSize(formatFileSize(databaseFiles.image.size));
-    }
-  }, [databaseFiles]);
-
-  // Wrapper for database file uploads to track sizes
-  const handleDatabaseUpload = (file: File) => {
-    if (file.name === "audios.zip") {
-      setDatabaseFiles((prev) => ({ ...prev, audio: file }));
-    } else if (file.name === "images.zip") {
-      setDatabaseFiles((prev) => ({ ...prev, image: file }));
-    }
-    onDatabaseFileUpload(file);
   };
 
-  // Handle the main upload button click with proper validation
   const handleUploadClick = () => {
     if (!hasMapper) {
       alert("Please upload mapper.json first using the Mapper button below");
       return;
     }
     if (!hasAudioZip && !hasImageZip) {
-      alert("Please upload either audios.zip or images.zip first");
+      alert("Please upload either an audio ZIP or image ZIP file first");
       return;
     }
     setUploadType("content");
     setShowForm(true);
   };
 
-  // Handle clicks on database section buttons with proper validation
   const handleDatabaseClick = (type: "mapper" | "audio" | "image") => {
     if (type === "mapper") {
       setUploadType(type);
@@ -118,25 +93,20 @@ const SideBar: React.FC<SideBarProps> = ({
     setShowForm(true);
   };
 
-  // Define allowed formats for different file types
   const allowedFormats = {
-    mapper: [".json", ".txt"],
+    mapper: [".json"],
     audio: [".zip"],
     image: [".zip"],
     content: {
-      audio: [".mp3", ".wav", ".ogg", ".m4a", ".mid", ".midi"],
-      image: [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"],
-    },
+      audio: [".mid", ".midi"],
+      image: [".jpg", ".jpeg", ".png"]
+    }
   };
 
-  // Get current allowed formats based on context
   const getCurrentAllowedFormats = () => {
     if (uploadType === "content") {
       if (hasAudioZip && hasImageZip) {
-        return [
-          ...allowedFormats.content.audio,
-          ...allowedFormats.content.image,
-        ];
+        return [...allowedFormats.content.audio, ...allowedFormats.content.image];
       }
       if (hasAudioZip) return allowedFormats.content.audio;
       if (hasImageZip) return allowedFormats.content.image;
@@ -209,7 +179,6 @@ const SideBar: React.FC<SideBarProps> = ({
           </div>
         </div>
 
-        {/* Upload Button Section */}
         <div className="flex justify-center border-b border-[#DBDBDB]/20 pb-6">
           <button
             onClick={handleUploadClick}
@@ -224,23 +193,20 @@ const SideBar: React.FC<SideBarProps> = ({
           </button>
         </div>
 
-        {/* Information Section - Displays file statistics */}
         <div className="space-y-3">
           <h2 className="text-[28px] text-[#DBDBDB] font-light">
             Information:
           </h2>
           <div className="space-y-2 text-[#DBDBDB]/80 text-sm pl-2">
-            <p>Total Songs: {hasAudioZip ? "100" : "-"}</p>
-            <p>Images Size: {hasImageZip ? imageSize : "-"}</p>
-            <p>Audios Size: {hasAudioZip ? audioSize : "-"}</p>
+            <p>Total Songs: {audioFilename ? "100" : "-"}</p>
+            <p>Images Size: {imageFilename ? imageSize : "-"}</p>
+            <p>Audios Size: {audioFilename ? audioSize : "-"}</p>
           </div>
         </div>
 
-        {/* Database Section - System file management */}
         <div className="space-y-4">
           <h2 className="text-[28px] text-[#DBDBDB] font-light">Database:</h2>
           <div className="space-y-4">
-            {/* Mapper Button */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => handleDatabaseClick("mapper")}
@@ -249,11 +215,10 @@ const SideBar: React.FC<SideBarProps> = ({
                 Mapper
               </button>
               <span className="text-[#DBDBDB]/80 text-sm">
-                Mapper: {hasMapper ? "mapper.json" : "-"}
+                Mapper: {mapperFilename || "-"}
               </span>
             </div>
 
-            {/* Image Button */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => handleDatabaseClick("image")}
@@ -267,11 +232,10 @@ const SideBar: React.FC<SideBarProps> = ({
                 Image
               </button>
               <span className="text-[#DBDBDB]/80 text-sm">
-                Image: {hasImageZip ? "images.zip" : "-"}
+                Image: {imageFilename || "-"}
               </span>
             </div>
 
-            {/* Audio Button */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => handleDatabaseClick("audio")}
@@ -285,20 +249,19 @@ const SideBar: React.FC<SideBarProps> = ({
                 Audio
               </button>
               <span className="text-[#DBDBDB]/80 text-sm">
-                Audio: {hasAudioZip ? "audios.zip" : "-"}
+                Audio: {audioFilename || "-"}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Upload Form Modal */}
       <Form
+        hasAudioZip={hasAudioZip}
+        hasImageZip={hasImageZip}
         isOpen={showForm}
         onClose={() => setShowForm(false)}
-        onFileUpload={
-          uploadType === "content" ? onContentFileUpload : handleDatabaseUpload
-        }
+        onFileUpload={uploadType === "content" ? onContentFileUpload : handleDatabaseUpload}
         uploadType={uploadType}
         allowedFormats={getCurrentAllowedFormats()}
       />

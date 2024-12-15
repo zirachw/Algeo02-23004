@@ -1,84 +1,72 @@
+// Navbar.tsx
 "use client";
 import React from "react";
 
+// Define the properties for the Navbar component
+// Includes a new optional isMicEnabled prop with a default of false
 interface NavbarProps {
-  currentView: "audio" | "image";
-  onSwitch: (view: "audio" | "image") => void;
   uploadedFile: File | null;
   hasAudioZip: boolean;
   hasImageZip: boolean;
   isUploadEnabled: boolean;
-  isMicEnabled: boolean;
   lastUploadedMediaType: "audio" | "image" | null;
   onSearch?: (query: string) => void;
+  canSearchByImage: boolean;
+  canSearchByAudio: boolean;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
-  currentView,
-  onSwitch,
   hasAudioZip,
-  hasImageZip,
-  isUploadEnabled,
-  isMicEnabled,
   lastUploadedMediaType,
   onSearch,
+  canSearchByImage,
+  canSearchByAudio,
 }) => {
-  // Handle search input changes and propagate to parent component
+  // Handle search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onSearch?.(event.target.value);
   };
 
   return (
-    <div className="w-full px-6 pt-8 pb-4 z-20 flex justify-between items-center bg-gray-100 backdrop-blur-sm">
-      {/* Left section containing view switches and microphone */}
+    <div className="w-full px-6 pt-8 pb-4 flex justify-between items-center bg-gray-100 backdrop-blur-sm">
       <div className="flex space-x-4 items-center">
-        {/* Image View Toggle Button */}
+        {/* Start Search by Image button */}
         <button
-          onClick={() => onSwitch("image")}
           className={`px-4 py-1.5 w-24 rounded-lg ring-1 ring-gray-300 transform transition-all duration-300 ease-in-out ${
-            currentView === "image" && isUploadEnabled
+            lastUploadedMediaType === "image"
               ? "bg-[#DBDBDB]"
               : "bg-white"
           } ${
-            isUploadEnabled && hasImageZip && lastUploadedMediaType === "image"
+            canSearchByImage
               ? "text-black hover:bg-gray-100 cursor-pointer"
               : "text-gray-400 cursor-not-allowed"
           }`}
-          disabled={
-            !isUploadEnabled ||
-            !hasImageZip ||
-            lastUploadedMediaType !== "image"
-          }
+          disabled={!canSearchByImage}
         >
           Image
         </button>
 
-        {/* Audio View Toggle Button */}
+        {/* Start Search by Audio button */}
         <button
-          onClick={() => onSwitch("audio")}
           className={`px-4 py-1.5 w-24 rounded-lg ring-1 ring-gray-300 transform transition-all duration-300 ease-in-out ${
-            currentView === "audio" && isUploadEnabled
+            lastUploadedMediaType === "audio"
               ? "bg-[#DBDBDB]"
               : "bg-white"
           } ${
-            isUploadEnabled && hasAudioZip && lastUploadedMediaType === "audio"
+            canSearchByAudio
               ? "text-black hover:bg-gray-100 cursor-pointer"
               : "text-gray-400 cursor-not-allowed"
           }`}
-          disabled={
-            !isUploadEnabled ||
-            !hasAudioZip ||
-            lastUploadedMediaType !== "audio"
-          }
+          disabled={!canSearchByAudio}
         >
           Audio
         </button>
 
-        {/* Microphone Toggle Button - Only enabled for audio content */}
+        {/* Search by Microphone button */}
         <button
-          disabled={!isMicEnabled}
+          disabled={!hasAudioZip && lastUploadedMediaType === null}
           className={`p-2 rounded-full transition-colors duration-200 ${
-            isMicEnabled
+            hasAudioZip && lastUploadedMediaType === null
               ? "text-black hover:bg-gray-100 cursor-pointer"
               : "text-gray-400 cursor-not-allowed"
           }`}
@@ -101,12 +89,12 @@ const Navbar: React.FC<NavbarProps> = ({
         </button>
       </div>
 
-      {/* Center section showing query processing time */}
+      {/* Query time display */}
       <div className="flex items-center">
         <span className="text-gray-700">Query Time: -</span>
       </div>
 
-      {/* Right section with search functionality */}
+      {/* Search by Name button */}
       <div className="relative flex items-center">
         <div className="relative">
           <input

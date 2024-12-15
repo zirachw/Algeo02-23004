@@ -18,15 +18,15 @@ const Card: React.FC<CardProps> = ({
   onPlayClick,
   hasAudioZip,
 }) => {
+  const showPlayButton = hasAudioZip;
+
   return (
-    // Using max-w-[160px] to control the maximum width of each card
-    <div className="w-full max-w-[210px] max-h-[400px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
-      {/* The image container maintains aspect ratio */}
+    <div className="w-full max-w-[210px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
       <div
         className="aspect-square w-full bg-cover bg-center relative"
         style={{ backgroundImage: `url(${imgUrl})` }}
       >
-        {hasAudioZip && (
+        {showPlayButton && (
           <button
             onClick={onPlayClick}
             className="absolute bottom-2 right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out hover:bg-gray-100"
@@ -43,7 +43,6 @@ const Card: React.FC<CardProps> = ({
         )}
       </div>
 
-      {/* Reduced padding and adjusted text sizes */}
       <div className="p-2">
         <h3 className="text-gray-900 text-[20px] pl-1">{title}</h3>
         <p className="text-gray-600 text-[15px] pl-1">{singer}</p>

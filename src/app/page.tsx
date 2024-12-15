@@ -1,4 +1,4 @@
-// HomePage.tsx
+// page.tsx
 "use client";
 import React, { useState } from "react";
 import SideBar from "./components/Sidebar";
@@ -8,22 +8,20 @@ import Navbar from "./components/Navbar";
 
 const HomePage: React.FC = () => {
   // Core view and file states
-  const [currentView, setCurrentView] = useState<"audio" | "image">("audio");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [uploadedPreviewFile, setUploadedPreviewFile] = useState<File | null>(
-    null
-  );
+  const [uploadedPreviewFile, setUploadedPreviewFile] = useState<File | null>(null);
 
   // File presence tracking
-  const [hasMapper, setHasMapper] = useState<boolean>(true);
-  const [hasAudioZip, setHasAudioZip] = useState<boolean>(true);
-  const [hasImageZip, setHasImageZip] = useState<boolean>(true);
+  const [hasMapper, setHasMapper] = useState<boolean>(false);
+  const [hasAudioZip, setHasAudioZip] = useState<boolean>(false);
+  const [hasImageZip, setHasImageZip] = useState<boolean>(false);
+
+  // Upload button and navigation states
+  const [uploadedFromUploadButton, setUploadedFromUploadButton] = useState<boolean>(false);
+  const [lastUploadedMediaType, setLastUploadedMediaType] = useState<"audio" | "image" | null>(null);
 
   // Media and player states
-  const [lastUploadedMediaType, setLastUploadedMediaType] = useState<
-    "audio" | "image" | null
-  >(null);
-  const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(true);
+  const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<{
     title: string;
     image: string;
@@ -36,7 +34,6 @@ const HomePage: React.FC = () => {
 
   const isContentReady = hasMapper && (hasAudioZip || hasImageZip);
 
-  // Validate different file types
   const isAudioFile = (file: File): boolean => {
     const fileType = file.type.toLowerCase();
     const fileExt = file.name.toLowerCase().split(".").pop() || "";
@@ -56,50 +53,43 @@ const HomePage: React.FC = () => {
     );
   };
 
-  // Handler for database-related file uploads
-  const handleDatabaseFileUpload = (file: File) => {
+  const handleDatabaseFileUpload = (file: File, type: "mapper" | "audio" | "image") => {
     setUploadedFile(file);
+    const fileExt = file.name.toLowerCase().split(".").pop() || "";
 
-    if (file.name === "mapper.json") {
+    if (type === "mapper" && fileExt === "json") {
       setHasMapper(true);
       setHasAudioZip(false);
       setHasImageZip(false);
       setLastUploadedMediaType(null);
-      setCurrentView("audio");
+      setUploadedPreviewFile(null);
       setShowAudioPlayer(false);
       setCurrentSong(null);
+      setUploadedFromUploadButton(false);
       return;
     }
 
-    if (file.name === "audios.zip") {
+    if (type === "audio" && fileExt === "zip") {
       setHasAudioZip(true);
       setShowAudioPlayer(false);
       return;
     }
 
-    if (file.name === "images.zip") {
+    if (type === "image" && fileExt === "zip") {
       setHasImageZip(true);
       return;
     }
   };
 
-  // Handler for content uploads via the Upload button
   const handleContentFileUpload = (file: File) => {
     setUploadedFile(file);
     setUploadedPreviewFile(file);
+    setUploadedFromUploadButton(true);
 
     if (isAudioFile(file)) {
       setLastUploadedMediaType("audio");
-      setCurrentView("audio");
     } else if (isImageFile(file)) {
       setLastUploadedMediaType("image");
-      setCurrentView("image");
-    }
-  };
-
-  const handleSwitch = (view: "audio" | "image") => {
-    if (isContentReady && lastUploadedMediaType === view) {
-      setCurrentView(view);
     }
   };
 
@@ -121,7 +111,6 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <SideBar
-        currentView={currentView}
         onDatabaseFileUpload={handleDatabaseFileUpload}
         onContentFileUpload={handleContentFileUpload}
         hasMapper={hasMapper}
@@ -134,15 +123,14 @@ const HomePage: React.FC = () => {
 
       <div className="flex-1 flex flex-col">
         <Navbar
-          currentView={currentView}
-          onSwitch={handleSwitch}
           uploadedFile={uploadedFile}
           hasAudioZip={hasAudioZip}
           hasImageZip={hasImageZip}
           isUploadEnabled={isContentReady}
-          isMicEnabled={hasAudioZip && lastUploadedMediaType === "audio"}
           lastUploadedMediaType={lastUploadedMediaType}
-          onSearch={handleSearch} 
+          onSearch={handleSearch}
+          canSearchByImage={lastUploadedMediaType === "image"}
+          canSearchByAudio={lastUploadedMediaType === "audio"}
         />
 
         {isContentReady ? (
@@ -150,8 +138,6 @@ const HomePage: React.FC = () => {
             <div className="flex-1 flex items-center px-8">
               <div className="w-full">
                 <CardSection
-                  currentView={currentView}
-                  onSwitch={handleSwitch}
                   uploadedFile={uploadedFile}
                   searchQuery={searchQuery}
                   onPlayClick={handlePlayClick}
@@ -171,13 +157,12 @@ const HomePage: React.FC = () => {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <h2 className="text-xl font-medium mb-2">
+            <div className="text-center text-black">
+              <h2 className="text-4xl font-medium mb-2">
                 Please upload required files
               </h2>
               <p>
-                Upload mapper.json and either audios.zip or images.zip to view
-                content
+                Upload mapper.json and either an audio ZIP or image ZIP file to view content
               </p>
             </div>
           </div>
