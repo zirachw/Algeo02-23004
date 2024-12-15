@@ -1,20 +1,19 @@
+// CardSection.tsx
 "use client";
 import React, { useState } from "react";
 import CardList from "./CardList";
 import Pagination from "./Pagination";
 import songData from "../../../test/mapper.json";
 
-// Define how many items we want to show per page
-const ITEMS_PER_PAGE = 12; // We use 12 because it works well with our grid layout (2x2, 3x4, etc.)
+const ITEMS_PER_PAGE = 12;
 
-// Add hasAudioZip to the interface
 interface CardSectionProps {
   currentView: "audio" | "image";
   onSwitch: (view: "audio" | "image") => void;
   uploadedFile: File | null;
   searchQuery: string;
   onPlayClick: (song: { title: string; image: string; singer: string }) => void;
-  hasAudioZip: boolean; // Add this prop
+  hasAudioZip: boolean;
 }
 
 const CardSection: React.FC<CardSectionProps> = ({
@@ -23,11 +22,10 @@ const CardSection: React.FC<CardSectionProps> = ({
   uploadedFile,
   searchQuery,
   onPlayClick,
-  hasAudioZip, // Receive the prop
+  hasAudioZip,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter songs based on the search query
   const filteredSongs = songData.songs.filter(
     (song) =>
       song.song.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -45,14 +43,13 @@ const CardSection: React.FC<CardSectionProps> = ({
       genre: song.genre,
     }));
 
-  // Only allow play if we have audio files
   const handleCardPlay = (songData: {
     title: string;
     image: string;
     singer: string;
     genre: string;
   }) => {
-    if (hasAudioZip && songData && songData.title) {
+    if (hasAudioZip && currentView === "audio" && songData && songData.title) {
       onPlayClick({
         title: songData.title,
         image: songData.image,
@@ -71,7 +68,8 @@ const CardSection: React.FC<CardSectionProps> = ({
         <CardList
           data={currentData}
           onPlayClick={handleCardPlay}
-          hasAudioZip={hasAudioZip} // Pass to CardList
+          hasAudioZip={hasAudioZip}
+          currentView={currentView}
         />
       </div>
       <div>

@@ -1,4 +1,4 @@
-// HomePage.tsx
+// page.tsx
 "use client";
 import React, { useState } from "react";
 import SideBar from "./components/Sidebar";
@@ -10,19 +10,19 @@ const HomePage: React.FC = () => {
   // Core view and file states
   const [currentView, setCurrentView] = useState<"audio" | "image">("audio");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [uploadedPreviewFile, setUploadedPreviewFile] = useState<File | null>(
-    null
-  );
+  const [uploadedPreviewFile, setUploadedPreviewFile] = useState<File | null>(null);
 
   // File presence tracking
   const [hasMapper, setHasMapper] = useState<boolean>(false);
   const [hasAudioZip, setHasAudioZip] = useState<boolean>(false);
   const [hasImageZip, setHasImageZip] = useState<boolean>(false);
 
+  // Upload button and navigation states
+  const [uploadedFromUploadButton, setUploadedFromUploadButton] = useState<boolean>(false);
+  const [lastUploadedContentExt, setLastUploadedContentExt] = useState<string | null>(null);
+  const [lastUploadedMediaType, setLastUploadedMediaType] = useState<"audio" | "image" | null>(null);
+
   // Media and player states
-  const [lastUploadedMediaType, setLastUploadedMediaType] = useState<
-    "audio" | "image" | null
-  >(null);
   const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<{
     title: string;
@@ -35,7 +35,23 @@ const HomePage: React.FC = () => {
 
   const isContentReady = hasMapper && (hasAudioZip || hasImageZip);
 
-  // Validate different file types
+  // Validation conditions for navigation
+  const canSwitchToAudio = Boolean(
+    isContentReady && 
+    hasAudioZip && 
+    uploadedFromUploadButton && 
+    lastUploadedContentExt && 
+    ['mid', 'midi'].includes(lastUploadedContentExt)
+  );
+
+  const canSwitchToImage = Boolean(
+    isContentReady && 
+    hasImageZip && 
+    uploadedFromUploadButton && 
+    lastUploadedContentExt && 
+    ['jpg', 'jpeg', 'png'].includes(lastUploadedContentExt)
+  );
+
   const isAudioFile = (file: File): boolean => {
     const fileType = file.type.toLowerCase();
     const fileExt = file.name.toLowerCase().split(".").pop() || "";
@@ -55,11 +71,11 @@ const HomePage: React.FC = () => {
     );
   };
 
-  // Handler for database-related file uploads
-  const handleDatabaseFileUpload = (file: File) => {
+  const handleDatabaseFileUpload = (file: File, type: "mapper" | "audio" | "image") => {
     setUploadedFile(file);
+    const fileExt = file.name.toLowerCase().split(".").pop() || "";
 
-    if (file.name === "mapper.json") {
+    if (type === "mapper" && fileExt === "json") {
       setHasMapper(true);
       setHasAudioZip(false);
       setHasImageZip(false);
@@ -67,25 +83,32 @@ const HomePage: React.FC = () => {
       setCurrentView("audio");
       setShowAudioPlayer(false);
       setCurrentSong(null);
+      setUploadedFromUploadButton(false);
+      setLastUploadedContentExt(null);
       return;
     }
 
-    if (file.name === "audios.zip") {
+    if (type === "audio" && fileExt === "zip") {
       setHasAudioZip(true);
+      setLastUploadedMediaType("audio");
       setShowAudioPlayer(false);
       return;
     }
 
-    if (file.name === "images.zip") {
+    if (type === "image" && fileExt === "zip") {
       setHasImageZip(true);
+      setLastUploadedMediaType("image");
       return;
     }
   };
 
-  // Handler for content uploads via the Upload button
   const handleContentFileUpload = (file: File) => {
     setUploadedFile(file);
     setUploadedPreviewFile(file);
+    setUploadedFromUploadButton(true);
+
+    const fileExt = file.name.toLowerCase().split(".").pop() || "";
+    setLastUploadedContentExt(fileExt);
 
     if (isAudioFile(file)) {
       setLastUploadedMediaType("audio");
@@ -97,7 +120,7 @@ const HomePage: React.FC = () => {
   };
 
   const handleSwitch = (view: "audio" | "image") => {
-    if (isContentReady && lastUploadedMediaType === view) {
+    if ((view === "audio" && canSwitchToAudio) || (view === "image" && canSwitchToImage)) {
       setCurrentView(view);
     }
   };
@@ -137,9 +160,10 @@ const HomePage: React.FC = () => {
           hasAudioZip={hasAudioZip}
           hasImageZip={hasImageZip}
           isUploadEnabled={isContentReady}
-          isMicEnabled={hasAudioZip && lastUploadedMediaType === "audio"}
           lastUploadedMediaType={lastUploadedMediaType}
           onSearch={handleSearch}
+          canSwitchToAudio={canSwitchToAudio}
+          canSwitchToImage={canSwitchToImage}
         />
 
         {isContentReady ? (
@@ -173,8 +197,7 @@ const HomePage: React.FC = () => {
                 Please upload required files
               </h2>
               <p>
-                Upload mapper.json and either audios.zip or images.zip to view
-                content
+                Upload mapper.json and either an audio ZIP or image ZIP file to view content
               </p>
             </div>
           </div>
