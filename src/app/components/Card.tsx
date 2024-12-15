@@ -7,7 +7,7 @@ interface CardProps {
   singer: string;
   genre: string;
   onPlayClick?: () => void;
-  hasAudioZip: boolean;
+  AudioZip: File | null;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -16,15 +16,15 @@ const Card: React.FC<CardProps> = ({
   singer,
   genre,
   onPlayClick,
-  hasAudioZip,
+  AudioZip,
 }) => {
-  const showPlayButton = hasAudioZip;
+  const showPlayButton = AudioZip;
 
   return (
     <div className="w-full max-w-[210px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
       <div
         className="aspect-square w-full bg-cover bg-center relative"
-        style={{ backgroundImage: `url(${imgUrl})` }}
+        style={{ backgroundImage: `http://localhost:3000/images/${imgUrl}` }}
       >
         {showPlayButton && (
           <button

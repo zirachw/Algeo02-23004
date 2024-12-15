@@ -8,8 +8,8 @@ interface FormProps {
   onFileUpload: (file: File, totalSize?: number) => void;
   uploadType: "mapper" | "audio" | "image" | "content";
   allowedFormats: string[];
-  hasAudioZip: boolean;
-  hasImageZip: boolean;
+  AudioZip: File | null;
+  ImageZip: File | null;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -18,8 +18,8 @@ const Form: React.FC<FormProps> = ({
   onFileUpload,
   uploadType,
   allowedFormats,
-  hasAudioZip,
-  hasImageZip,
+  AudioZip,
+  ImageZip,
 }) => {
   const [dragging, setDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -122,11 +122,11 @@ const Form: React.FC<FormProps> = ({
     if (uploadType === 'audio') return 'ZIP file containing MIDI files';
     if (uploadType === 'image') return 'ZIP file containing images';
     if (uploadType === 'content') {
-      if (hasAudioZip && hasImageZip) {
+      if (AudioZip && ImageZip) {
         return 'Audio files (.mid, .midi) or Image files (.jpg, .jpeg, .png)';
       }
-      if (hasAudioZip) return 'Audio files (.mid, .midi)';
-      if (hasImageZip) return 'Image files (.jpg, .jpeg, .png)';
+      if (AudioZip) return 'Audio files (.mid, .midi)';
+      if (ImageZip) return 'Image files (.jpg, .jpeg, .png)';
       return 'No supported files';
     }
     return 'Supported files';
@@ -159,7 +159,7 @@ const Form: React.FC<FormProps> = ({
     if ((uploadType === 'audio' || uploadType === 'image') && ext === '.zip') {
       try {
         const zip = await JSZip.loadAsync(file);
-        let hasValidFiles = false;
+        let ValidFiles = false;
         let invalidFiles: string[] = [];
         let totalSize = 0;
         let validFileCount = 0;
@@ -180,7 +180,7 @@ const Form: React.FC<FormProps> = ({
                 const fileData = await zipFile.async('blob');
                 totalSize += fileData.size;
                 validFileCount++;
-                hasValidFiles = true;
+                ValidFiles = true;
               }
             }
           })
@@ -196,7 +196,7 @@ const Form: React.FC<FormProps> = ({
           return;
         }
         
-        if (!hasValidFiles) {
+        if (!ValidFiles) {
           setErrorMessage(
             `ZIP file is empty or contains no valid ${uploadType === 'audio' ? 'MIDI' : 'image'} files.`
           );
@@ -221,6 +221,7 @@ const Form: React.FC<FormProps> = ({
     if (selectedFile && uploadProgress === 100) {
       onFileUpload(selectedFile, totalZipSize || selectedFile.size);
       handleClose();
+      
     }
   };
 
@@ -230,7 +231,7 @@ const Form: React.FC<FormProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm cursor-not-allowed" />
       <div className="relative bg-white rounded-xl p-8 w-[640px] max-w-3xl border-sky-100 shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#fff,0_0_15px_#fff,0_0_30px_#fff]">
         <button
           onClick={handleClose}

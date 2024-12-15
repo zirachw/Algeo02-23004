@@ -6,9 +6,9 @@ import React from "react";
 // Includes a new optional isMicEnabled prop with a default of false
 interface NavbarProps {
   uploadedFile: File | null;
-  hasAudioZip: boolean;
-  hasImageZip: boolean;
-  isUploadEnabled: boolean;
+  AudioZip: File | null;
+  ImageZip: File | null;
+  isUploadEnabled: File | null;
   lastUploadedMediaType: "audio" | "image" | null;
   onSearch?: (query: string) => void;
   canSearchByImage: boolean;
@@ -16,7 +16,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({
-  hasAudioZip,
+  AudioZip,
   lastUploadedMediaType,
   onSearch,
   canSearchByImage,
@@ -64,9 +64,9 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Search by Microphone button */}
         <button
-          disabled={!hasAudioZip && lastUploadedMediaType === null}
+          disabled={!AudioZip && lastUploadedMediaType === null}
           className={`p-2 rounded-full transition-colors duration-200 ${
-            hasAudioZip && lastUploadedMediaType === null
+            AudioZip && lastUploadedMediaType === null
               ? "text-black hover:bg-gray-100 cursor-pointer"
               : "text-gray-400 cursor-not-allowed"
           }`}
