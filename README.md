@@ -85,6 +85,23 @@
    venv/Scripts/activate
    ```
 
+### Running
+1. Go to
+   ```sh
+   cd src/backend
+   ```
+2. Run the Backend
+   ```sh
+   python main.py
+   ```
+3. Back to
+   ```sh
+   cd ../..
+   ```
+2. Run the Frontend
+   ```sh
+   npm run dev
+   ```
 ---
 
 ## ✨ Features
