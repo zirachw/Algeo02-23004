@@ -78,25 +78,40 @@ const CardSection: React.FC<CardSectionProps> = ({
   };
 
   return (
-    <div className="flex flex-col">
-      <div>
-        <CardList
-          data={currentData}
-          onPlayClick={handleCardPlay}
-          AudioZip={AudioZip}
-        />
-      </div>
-      <div>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={filteredSongs.length}
-          itemsPerPage={ITEMS_PER_PAGE}
-          onPageChange={handlePageChange}
-        />
-      </div>
+    <div className="w-full flex flex-col h-full px-12">
+      {filteredSongs.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center text-black">
+            <h2 className="text-4xl font-medium mb-2">
+              No results found
+            </h2>
+            <p>
+              Try searching for something else or upload a new file
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="flex-grow overflow-y-auto">
+            <CardList
+              data={currentData}
+              onPlayClick={handleCardPlay}
+              AudioZip={AudioZip}
+            />
+          </div>
+          <div className="py-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={filteredSongs.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </>
+      )}
     </div>
-  );
+  );  
 };
 
 export default CardSection;

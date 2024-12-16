@@ -209,8 +209,7 @@ const HomePage: React.FC = () => {
 
         {isContentReady ? (
           <>
-            <div className="flex-1 flex items-center px-8">
-              <div className="w-full">
+            <div className="flex-1 flex flex-col">
                 <CardSection
                   similarData={similarData}
                   uploadedFile={uploadedFile}
@@ -218,7 +217,6 @@ const HomePage: React.FC = () => {
                   onPlayClick={handlePlayClick}
                   AudioZip={AudioZip}
                 />
-              </div>
             </div>
 
             {showAudioPlayer && currentSong && (

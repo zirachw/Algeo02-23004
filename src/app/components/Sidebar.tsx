@@ -121,7 +121,7 @@ const SideBar: React.FC<SideBarProps> = ({
   return (
     <div className="w-1/5 bg-gradient-to-b from-[#535353] to-[#303030] flex flex-col">
 
-      <div className="flex-1 flex flex-col justify-normal items-center px-8 space-y-8">
+      <div className="flex-1 flex flex-col justify-between items-center px-8 py-8 gap-8">
         <h1 className="text-4xl text-[#DBDBDB]">Melodia.</h1>
         {/* Preview Card - Shows currently uploaded content file */}
         <div className="flex justify-center">
