@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import path from 'path';
+import path from "path";
 
 interface CardProps {
   imgUrl: string;
@@ -9,6 +9,8 @@ interface CardProps {
   genre: string;
   onPlayClick?: () => void;
   AudioZip: File | null;
+  ImageZip: File | null;
+  Mapper: File | null;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -18,8 +20,12 @@ const Card: React.FC<CardProps> = ({
   genre,
   onPlayClick,
   AudioZip,
+  ImageZip,
+  Mapper,
 }) => {
-  const showPlayButton = AudioZip;
+  const showPlayButton =
+    (AudioZip && ImageZip && Mapper) ||
+    (AudioZip && ImageZip === null && Mapper === null);
 
   return (
     <div className="w-full max-w-[210px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">

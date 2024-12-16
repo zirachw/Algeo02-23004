@@ -4,22 +4,26 @@ import VoiceRecorderForm from "./RecordForm";
 import ConvertForm from "./ConvertForm";
 
 interface NavbarProps {
+  onHandlePreview: () => void;
+  currentView: "audio" | "image" | null;
+  onSwitch: (view: "audio" | "image") => void;
   uploadedFile: File | null;
   AudioZip: File | null;
   ImageZip: File | null;
   isUploadEnabled: File | null;
   lastUploadedMediaType: "audio" | "image" | null;
   onSearch?: (query: string) => void;
-  canSearchByImage: boolean;
-  canSearchByAudio: boolean;
+  queryTime: number | null;
 }
-
 const Navbar: React.FC<NavbarProps> = ({
+  currentView,
+  onHandlePreview,
+  onSwitch,
   AudioZip,
+  ImageZip,
   lastUploadedMediaType,
   onSearch,
-  canSearchByImage,
-  canSearchByAudio,
+  queryTime,
 }) => {
   const [isRecorderOpen, setRecorderOpen] = useState(false);
   const [isConvertFormOpen, setConvertFormOpen] = useState(false);
@@ -40,7 +44,6 @@ const Navbar: React.FC<NavbarProps> = ({
 
   const handleConvert = (wavFile: File) => {
     console.log("Converting WAV to MIDI:", wavFile);
-
   };
 
   return (
@@ -49,28 +52,30 @@ const Navbar: React.FC<NavbarProps> = ({
         <div className="flex space-x-4 items-center">
           {/* Start Search by Image button */}
           <button
+            onClick={() => {onSwitch("image"); onHandlePreview()}}
             className={`px-4 py-1.5 w-24 rounded-lg ring-1 ring-gray-300 transform transition-all duration-300 ease-in-out ${
-              lastUploadedMediaType === "image" ? "bg-[#DBDBDB]" : "bg-white"
-            } ${
-              canSearchByImage
-                ? "text-black hover:bg-gray-100 cursor-pointer"
-                : "text-gray-400 cursor-not-allowed"
-            }`}
-            disabled={!canSearchByImage}
+                ImageZip 
+                  ? currentView === "image"  // Check if button was clicked
+                    ? "bg-[#DBDBDB] text-black"  // Clicked state
+                    : "bg-white text-black"      // Normal state
+                  : "bg-white text-gray-400 cursor-not-allowed"  // Disabled state
+              }`}
+            disabled={ImageZip === null}
           >
             Image
           </button>
 
           {/* Start Search by Audio button */}
           <button
+            onClick={() => {onSwitch("audio"); onHandlePreview()}}
             className={`px-4 py-1.5 w-24 rounded-lg ring-1 ring-gray-300 transform transition-all duration-300 ease-in-out ${
-              lastUploadedMediaType === "audio" ? "bg-[#DBDBDB]" : "bg-white"
-            } ${
-              canSearchByAudio
-                ? "text-black hover:bg-gray-100 cursor-pointer"
-                : "text-gray-400 cursor-not-allowed"
-            }`}
-            disabled={!canSearchByAudio}
+                AudioZip 
+                  ? currentView === "audio"  // Check if button was clicked
+                    ? "bg-[#DBDBDB] text-black"  // Clicked state
+                    : "bg-white text-black"      // Normal state
+                  : "bg-white text-gray-400 cursor-not-allowed"  // Disabled state
+              }`}
+            disabled={AudioZip === null}
           >
             Audio
           </button>
@@ -78,27 +83,23 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* Convert WAV to MIDI */}
           <button
             onClick={handleOpenConvertForm}
-            className={`px-4 py-1.5 w-24 rounded-lg ring-1 ring-gray-300 transform transition-all duration-300 ease-in-out ${
-              AudioZip
-                ? "text-black hover:bg-gray-100 cursor-pointer"
-                : "text-gray-400 cursor-not-allowed"
-            }`}
-            disabled={!AudioZip === null}
+            className="px-4 py-1.5 w-24 rounded-lg ring-1 ring-gray-300 transform transition-all duration-300 ease-in-out text-black hover:bg-gray-100 cursor-pointer"
           >
             Convert
           </button>
         </div>
 
         <div className="flex items-center">
-          <span className="text-gray-700">Query Time: -</span>
+          <span className="text-gray-400 mr-2">Query Time:</span>
+          <span className="text-gray-400"> {queryTime ?? "-"}</span>
         </div>
 
         <div className="relative flex space-x-4 items-center">
           <button
             onClick={handleOpenRecorder}
-            disabled={!AudioZip && lastUploadedMediaType === null}
+            disabled={!AudioZip}
             className={`p-2 rounded-full transition-colors duration-200 ${
-              AudioZip && lastUploadedMediaType === null
+              AudioZip
                 ? "text-black hover:bg-gray-100 cursor-pointer"
                 : "text-gray-400 cursor-not-allowed"
             }`}

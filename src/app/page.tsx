@@ -20,8 +20,13 @@ interface SimilarData {
 
 const HomePage: React.FC = () => {
   // Core view and file states
+  const [currentView, setCurrentView] = useState<"audio" | "image" | null>(
+    null
+  );
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [uploadedPreviewFile, setUploadedPreviewFile] = useState<File | null>(null);
+  const [uploadedPreviewFile, setUploadedPreviewFile] = useState<File | null>(
+    null
+  );
 
   // File presence tracking
   const [Mapper, setMapper] = useState<File | null>(null);
@@ -31,10 +36,14 @@ const HomePage: React.FC = () => {
   const [queryFile, setQueryFile] = useState<File | null>(null);
 
   const [similarData, setSimilarData] = useState<SimilarData | null>(null);
+  const [queryTime, setQueryTime] = useState<number | null>(null);
 
   // Upload button and navigation states
-  const [uploadedFromUploadButton, setUploadedFromUploadButton] = useState<boolean>(false);
-  const [lastUploadedMediaType, setLastUploadedMediaType] = useState<"audio" | "image" | null>(null);
+  const [uploadedFromUploadButton, setUploadedFromUploadButton] =
+    useState<boolean>(false);
+  const [lastUploadedMediaType, setLastUploadedMediaType] = useState<
+    "audio" | "image" | null
+  >(null);
 
   // Media and player states
   const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(false);
@@ -69,36 +78,49 @@ const HomePage: React.FC = () => {
     );
   };
 
-  const handleDatabaseFileUpload = async (file: File, type: "mapper" | "audio" | "image") => {
+  const handlePreview = async () =>{
+    setLastUploadedMediaType(null),
+    setUploadedPreviewFile(null),
+    setShowAudioPlayer(false),
+    setCurrentSong(null),
+    setUploadedFromUploadButton(false)
+  }
+
+  const handleDatabaseFileUpload = async (
+    file: File,
+    type: "mapper" | "audio" | "image"
+  ) => {
     setUploadedFile(file);
     const fileExt = file.name.toLowerCase().split(".").pop() || "";
-  
+
     if (type === "mapper" && fileExt === "json") {
       setMapper(file);
-      setAudioZip(null);
-      setImageZip(null);
-      setLastUploadedMediaType(null);
-      setUploadedPreviewFile(null);
-      setShowAudioPlayer(false);
-      setCurrentSong(null);
-      setUploadedFromUploadButton(false);
       return;
     }
-  
+
     if (type === "audio" && fileExt === "zip") {
       try {
         const formData = new FormData();
-        if (Mapper)  {formData.append("mapper_file", Mapper)}
-        if (file) {formData.append("file", file)}
-
-        const response = await fetch("http://127.0.0.1:8000/upload-audio-dataset", {
-          method: "POST",
-          body: formData,
-          headers: {
-            "enctype": "multipart/form-data",
+        if (Mapper) {
+          formData.append("mapper_file", Mapper);
+        }
+        if (file) {
+          formData.append("file", file);
+        }
+        
+        setMapper(null);
+        
+        const response = await fetch(
+          "http://127.0.0.1:8000/upload-audio-dataset",
+          {
+            method: "POST",
+            body: formData,
+            headers: {
+              enctype: "multipart/form-data",
+            },
           }
-        });
-  
+        );
+
         if (response.ok) {
           const result = await response.json();
           console.log("Dataset uploaded successfully:", result);
@@ -111,23 +133,31 @@ const HomePage: React.FC = () => {
       } catch (error) {
         console.error("Failed to upload dataset:", error);
       }
-      return;      
+      return;
     }
-  
+
     if (type === "image" && fileExt === "zip") {
       try {
         const formData = new FormData();
-        if (Mapper)  {formData.append("mapper_file", Mapper)}
-        if (file) {formData.append("file", file)}
+        if (Mapper) {
+          formData.append("mapper_file", Mapper);
+        }
+        if (file) {
+          formData.append("file", file);
+        }
         
-        const response = await fetch("http://127.0.0.1:8000/upload-image-dataset", {
-          method: "POST",
-          body: formData,
-          headers: {
-            "enctype": "multipart/form-data",
+        setMapper(null);
+        const response = await fetch(
+          "http://127.0.0.1:8000/upload-image-dataset",
+          {
+            method: "POST",
+            body: formData,
+            headers: {
+              enctype: "multipart/form-data",
+            },
           }
-        });
-  
+        );
+
         if (response.ok) {
           const result = await response.json();
           console.log("Dataset uploaded successfully:", result);
@@ -141,10 +171,15 @@ const HomePage: React.FC = () => {
       }
       return;
     }
-  };  
+  };
+
+  const handleSwitch = (view: "audio" | "image") => {
+    if ((view === "audio" && AudioZip) || (view === "image" && ImageZip)) {
+      setCurrentView(view);
+    }
+  };
 
   const handleContentFileUpload = async (file: File) => {
-    
     setUploadedFromUploadButton(true);
     setQueryFile(file);
     setUploadedPreviewFile(file);
@@ -171,11 +206,13 @@ const HomePage: React.FC = () => {
           method: "POST",
           body: formData,
         });
-  
+
         if (response.ok) {
           const result = await response.json();
           console.log("Image dataset queried successfully:", result);
           setSimilarData(result);
+          setQueryTime(result.processing_metrics.processing_time);
+          setUploadedFile(file);
         } else {
           const error = await response.json();
           console.error("Error querying audio:", error);
@@ -194,11 +231,13 @@ const HomePage: React.FC = () => {
           method: "POST",
           body: formData,
         });
-  
+
         if (response.ok) {
           const result = await response.json();
           console.log("Audio query successfully:", result);
-          setSimilarData(result);          
+          setSimilarData(result);
+          setQueryTime(result.processing_metrics.processing_time);
+          setUploadedFile(file);
         } else {
           const error = await response.json();
           console.error("Error querying image:", error);
@@ -223,10 +262,10 @@ const HomePage: React.FC = () => {
     setSearchQuery(query);
   };
 
-
   return (
     <div className="flex min-h-screen bg-gray-100">
       <SideBar
+        currentView={currentView}
         onDatabaseFileUpload={handleDatabaseFileUpload}
         onContentFileUpload={handleContentFileUpload}
         onSearchQuery={handleSearchQuery}
@@ -241,34 +280,35 @@ const HomePage: React.FC = () => {
 
       <div className="w-4/5 flex flex-col">
         <Navbar
+          onHandlePreview={handlePreview}
+          currentView={currentView}
+          onSwitch={handleSwitch}
           uploadedFile={uploadedFile}
           AudioZip={AudioZip}
           ImageZip={ImageZip}
           isUploadEnabled={isContentReady}
           lastUploadedMediaType={lastUploadedMediaType}
           onSearch={handleSearch}
-          canSearchByImage={lastUploadedMediaType === "image"}
-          canSearchByAudio={lastUploadedMediaType === "audio"}
+          queryTime={queryTime}
         />
 
         {isContentReady ? (
           <>
             <div className="flex-1 flex flex-col">
-                <CardSection
-                  similarData={similarData}
-                  uploadedFile={uploadedFile}
-                  searchQuery={searchQuery}
-                  onPlayClick={handlePlayClick}
-                  AudioZip={AudioZip}
-                />
+              <CardSection
+                similarData={similarData}
+                uploadedFile={uploadedFile}
+                searchQuery={searchQuery}
+                onPlayClick={handlePlayClick}
+                AudioZip={AudioZip}
+                ImageZip={ImageZip}
+                Mapper={Mapper}
+              />
             </div>
 
             {showAudioPlayer && currentSong && (
               <div className="bg-[#303030]">
-                <AudioPlayer
-                  isEnabled={AudioZip}
-                  currentSong={currentSong}
-                />
+                <AudioPlayer isEnabled={AudioZip} currentSong={currentSong} />
               </div>
             )}
           </>
@@ -279,7 +319,8 @@ const HomePage: React.FC = () => {
                 Please upload required files
               </h2>
               <p>
-                Upload mapper.json and either an audio ZIP or image ZIP file to view content
+                Upload mapper.json and either an audio ZIP or image ZIP file to
+                view content
               </p>
             </div>
           </div>

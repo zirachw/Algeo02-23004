@@ -18,12 +18,16 @@ interface CardListProps {
     audio: string;
   }) => void;
   AudioZip: File | null;
+  ImageZip: File | null;
+  Mapper: File | null;
 }
 
 const CardList: React.FC<CardListProps> = ({
   data,
   onPlayClick,
   AudioZip,
+  ImageZip,
+  Mapper,
 }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -36,6 +40,8 @@ const CardList: React.FC<CardListProps> = ({
           genre={item.genre}
           onPlayClick={() => onPlayClick?.(item)}
           AudioZip={AudioZip}
+          ImageZip={ImageZip}
+          Mapper={Mapper}
         />
       ))}
     </div>
