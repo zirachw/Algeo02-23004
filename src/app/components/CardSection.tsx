@@ -23,8 +23,15 @@ interface CardSectionProps {
   similarData: SimilarData | null;
   uploadedFile: File | null;
   searchQuery: string;
-  onPlayClick: (song: { title: string; image: string; singer: string; audio: string}) => void;
+  onPlayClick: (song: {
+    title: string;
+    image: string;
+    singer: string;
+    audio: string;
+  }) => void;
   AudioZip: File | null;
+  ImageZip: File | null;
+  Mapper: File | null;
 }
 
 const CardSection: React.FC<CardSectionProps> = ({
@@ -32,10 +39,16 @@ const CardSection: React.FC<CardSectionProps> = ({
   searchQuery,
   onPlayClick,
   AudioZip,
+  ImageZip,
+  Mapper,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const Songs = similarData ? similarData.matching_results : songData.songs;
-  if (similarData) console.log("this is similarData.matching_results: ", similarData.matching_results);
+  if (similarData)
+    console.log(
+      "this is similarData.matching_results: ",
+      similarData.matching_results
+    );
   const filteredSongs = Songs.filter(
     (song) =>
       song.song.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -80,12 +93,8 @@ const CardSection: React.FC<CardSectionProps> = ({
       {filteredSongs.length === 0 ? (
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center text-black">
-            <h2 className="text-4xl font-medium mb-2">
-              No results found
-            </h2>
-            <p>
-              Try searching for something else or upload a new file
-            </p>
+            <h2 className="text-4xl font-medium mb-2">No results found</h2>
+            <p>Try searching for something else or upload a new file</p>
           </div>
         </div>
       ) : (
@@ -95,6 +104,8 @@ const CardSection: React.FC<CardSectionProps> = ({
               data={currentData}
               onPlayClick={handleCardPlay}
               AudioZip={AudioZip}
+              ImageZip={ImageZip}
+              Mapper={Mapper}
             />
           </div>
           <div className="py-4">
@@ -109,7 +120,7 @@ const CardSection: React.FC<CardSectionProps> = ({
         </>
       )}
     </div>
-  );  
+  );
 };
 
 export default CardSection;
