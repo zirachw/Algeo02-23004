@@ -35,9 +35,6 @@ const CardSection: React.FC<CardSectionProps> = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const Songs = similarData ? similarData.matching_results : songData.songs;
-  
-  console.log("this is Songs: ",Songs);
-  console.log("this is similarData: ",similarData);
   if (similarData) console.log("this is similarData.matching_results: ", similarData.matching_results);
   const filteredSongs = Songs.filter(
     (song) =>
@@ -51,10 +48,10 @@ const CardSection: React.FC<CardSectionProps> = ({
     .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
     .map((song) => ({
       title: song.song,
-      image: `/images/${song.album}`,
+      image: `${song.album}`,
       singer: song.singer,
       genre: song.genre,
-      audio: `audio/${song.audio}`,
+      audio: `${song.audio}`,
     }));
 
   const handleCardPlay = (songData: {
@@ -62,13 +59,14 @@ const CardSection: React.FC<CardSectionProps> = ({
     image: string;
     singer: string;
     genre: string;
+    audio: string;
   }) => {
     if (AudioZip && songData && songData.title) {
       onPlayClick({
         title: songData.title,
         image: songData.image,
         singer: songData.singer,
-        audio: "audio/temp.mid",
+        audio: songData.audio,
       });
     }
   };

@@ -84,23 +84,41 @@ const HomePage: React.FC = () => {
     }
   
     if (type === "audio" && fileExt === "zip") {
-      setAudioZip(file);
-      setShowAudioPlayer(false);
-      return;
+      try {
+        const formData = new FormData();
+        if (Mapper)  {formData.append("mapper_file", Mapper)}
+        if (file) {formData.append("file", file)}
+
+        const response = await fetch("http://127.0.0.1:8000/upload-audio-dataset", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "enctype": "multipart/form-data",
+          }
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Dataset uploaded successfully:", result);
+          setAudioZip(file);
+          setShowAudioPlayer(false);
+        } else {
+          const error = await response.json();
+          console.error("Error uploading dataset:", error);
+        }
+      } catch (error) {
+        console.error("Failed to upload dataset:", error);
+      }
+      return;      
     }
   
     if (type === "image" && fileExt === "zip") {
       try {
-        // Create a FormData object for the file
         const formData = new FormData();
         if (Mapper)  {formData.append("mapper_file", Mapper)}
         if (file) {formData.append("file", file)}
         
-        console.log(Mapper); // Should show File object with name, size, and type
-        console.log(file); // Should show File object with name, size, and type
-
-        // Send POST request to the /upload-dataset endpoint
-        const response = await fetch("http://127.0.0.1:8000/upload-dataset", {
+        const response = await fetch("http://127.0.0.1:8000/upload-image-dataset", {
           method: "POST",
           body: formData,
           headers: {
@@ -129,39 +147,57 @@ const HomePage: React.FC = () => {
 
     if (isAudioFile(file)) {
       setLastUploadedMediaType("audio");
+      try {
+        const formData = new FormData();
+
+        if (file) {
+          formData.append("file", file);
+        }
+
+        const response = await fetch("http://127.0.0.1:8000/search-audio", {
+          method: "POST",
+          body: formData,
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Image dataset queried successfully:", result);
+          setSimilarData(result);
+          setUploadedFile(file);
+          setUploadedPreviewFile(file);
+        } else {
+          const error = await response.json();
+          console.error("Error querying audio:", error);
+        }
+      } catch (error) {
+        console.error("Failed to query audio:", error);
+      }
     } else if (isImageFile(file)) {
       setLastUploadedMediaType("image");
       try {
-        // Create a FormData object for the file
         const formData = new FormData();
         
         if (file) {
           formData.append("file", file);
         }
 
-        console.log("anjay", file); // Should show File object with name, size, and type
-
-        // Send POST request to the /upload-dataset endpoint
-        const response = await fetch("http://127.0.0.1:8000/search", {
+        const response = await fetch("http://127.0.0.1:8000/search-image", {
           method: "POST",
           body: formData,
-          // headers: {
-          //   "enctype": "multipart/form-data",
-          // }
         });
   
         if (response.ok) {
           const result = await response.json();
-          console.log("Dataset queried successfully:", result);
+          console.log("Audio query successfully:", result);
           setSimilarData(result);
           setUploadedFile(file);
           setUploadedPreviewFile(file);
         } else {
           const error = await response.json();
-          console.error("Error uploading dataset:", error);
+          console.error("Error querying image:", error);
         }
       } catch (error) {
-        console.error("Failed to upload dataset:", error);
+        console.error("Failed to query image:", error);
       }
     }
   };

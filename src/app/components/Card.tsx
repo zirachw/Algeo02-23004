@@ -1,5 +1,6 @@
-// Card.tsx
 import React from "react";
+import Image from "next/image";
+import path from 'path';
 
 interface CardProps {
   imgUrl: string;
@@ -22,10 +23,13 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div className="w-full max-w-[210px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
-      <div
-        className="aspect-square w-full bg-cover bg-center relative"
-        style={{ backgroundImage: `http://localhost:3000/images/${imgUrl}` }}
-      >
+      <div className="aspect-square w-full relative">
+        <Image
+          src={`/temp_extracted/images/${imgUrl}`}
+          alt={title}
+          fill
+          className="object-cover"
+        />
         {showPlayButton && (
           <button
             onClick={onPlayClick}
