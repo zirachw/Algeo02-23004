@@ -13,7 +13,7 @@ interface NavbarProps {
   isUploadEnabled: File | null;
   lastUploadedMediaType: "audio" | "image" | null;
   onSearch?: (query: string) => void;
-}
+  queryTime: number | null;
 
 const Navbar: React.FC<NavbarProps> = ({
   currentView,
@@ -23,6 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({
   ImageZip,
   lastUploadedMediaType,
   onSearch,
+  queryTime,
 }) => {
   const [isRecorderOpen, setRecorderOpen] = useState(false);
   const [isConvertFormOpen, setConvertFormOpen] = useState(false);
@@ -89,7 +90,8 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         <div className="flex items-center">
-          <span className="text-gray-700">Query Time: -</span>
+          <span className="text-gray-400 mr-2">Query Time:</span>
+          <span className="text-gray-400"> {queryTime ?? "-"}</span>
         </div>
 
         <div className="relative flex space-x-4 items-center">
