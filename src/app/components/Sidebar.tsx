@@ -4,7 +4,11 @@ import React, { useState } from "react";
 import Form from "./Form";
 
 interface SideBarProps {
-  onDatabaseFileUpload: (file: File, type: "mapper" | "audio" | "image") => void;
+  currentView: "audio" | "image" | null;
+  onDatabaseFileUpload: (
+    file: File,
+    type: "mapper" | "audio" | "image"
+  ) => void;
   onContentFileUpload: (file: File) => void;
   Mapper: File | null;
   AudioZip: File | null;
@@ -21,6 +25,7 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({
+  currentView,
   onDatabaseFileUpload,
   onContentFileUpload,
   Mapper,
@@ -31,7 +36,9 @@ const SideBar: React.FC<SideBarProps> = ({
   onPlayClick,
 }) => {
   const [showForm, setShowForm] = useState(false);
-  const [uploadType, setUploadType] = useState<"mapper" | "audio" | "image" | "content">("mapper");
+  const [uploadType, setUploadType] = useState<
+    "mapper" | "audio" | "image" | "content"
+  >("mapper");
   const [audioSize, setAudioSize] = useState<string>("0");
   const [imageSize, setImageSize] = useState<string>("0");
   const [mapperFilename, setMapperFilename] = useState<string>("");
@@ -52,15 +59,14 @@ const SideBar: React.FC<SideBarProps> = ({
   };
 
   const handleDatabaseUpload = (file: File, totalSize?: number) => {
-    if (uploadType === 'mapper') {
+    if (uploadType === "mapper") {
       setMapperFilename(file.name);
       onDatabaseFileUpload(file, "mapper");
-      
-    } else if (uploadType === 'audio') {
+    } else if (uploadType === "audio") {
       setAudioFilename(file.name);
       setAudioSize(formatFileSize(totalSize || file.size));
       onDatabaseFileUpload(file, "audio");
-    } else if (uploadType === 'image') {
+    } else if (uploadType === "image") {
       setImageFilename(file.name);
       setImageSize(formatFileSize(totalSize || file.size));
       onDatabaseFileUpload(file, "image");
@@ -81,17 +87,6 @@ const SideBar: React.FC<SideBarProps> = ({
   };
 
   const handleDatabaseClick = (type: "mapper" | "audio" | "image") => {
-    if (type === "mapper") {
-      setUploadType(type);
-      setShowForm(true);
-      return;
-    }
-
-    if (!Mapper) {
-      alert("Please upload mapper.json first");
-      return;
-    }
-
     setUploadType(type);
     setShowForm(true);
   };
@@ -102,17 +97,14 @@ const SideBar: React.FC<SideBarProps> = ({
     image: [".zip"],
     content: {
       audio: [".mid", ".midi"],
-      image: [".jpg", ".jpeg", ".png"]
-    }
+      image: [".jpg", ".jpeg", ".png"],
+    },
   };
 
   const getCurrentAllowedFormats = () => {
     if (uploadType === "content") {
-      if (AudioZip && ImageZip) {
-        return [...allowedFormats.content.audio, ...allowedFormats.content.image];
-      }
-      if (AudioZip) return allowedFormats.content.audio;
-      if (ImageZip) return allowedFormats.content.image;
+      if (currentView === "audio") return allowedFormats.content.audio;
+      else if (currentView === "image") return allowedFormats.content.image;
       return [];
     }
     return allowedFormats[uploadType];
@@ -120,7 +112,6 @@ const SideBar: React.FC<SideBarProps> = ({
 
   return (
     <div className="w-1/5 bg-gradient-to-b from-[#535353] to-[#303030] flex flex-col">
-
       <div className="flex-1 flex flex-col justify-between items-center px-8 py-8 gap-8">
         <h1 className="text-4xl text-[#DBDBDB]">Melodia.</h1>
         {/* Preview Card - Shows currently uploaded content file */}
@@ -147,7 +138,7 @@ const SideBar: React.FC<SideBarProps> = ({
                             title: uploadedPreviewFile.name,
                             image: "/default-audio-image.jpg",
                             singer: "Unknown Artist",
-                            audio: "audio/temp.mid"
+                            audio: "audio/temp.mid",
                           });
                         }}
                       >
@@ -184,12 +175,12 @@ const SideBar: React.FC<SideBarProps> = ({
         </div>
 
         <div className="flex justify-center border-b border-[#DBDBDB]/20 pb-6">
-          <div className="flex space-x-4"> 
+          <div className="flex space-x-4">
             <button
               onClick={handleUploadClick}
-              disabled={!Mapper || (!AudioZip && !ImageZip)}
+              disabled={currentView === null}
               className={`w-[100px] h-[40px] ${
-                Mapper && (AudioZip || ImageZip)
+                currentView
                   ? "bg-[#DBDBDB] hover:bg-gray-300"
                   : "bg-gray-500 cursor-not-allowed"
               } text-black rounded-lg text-sm transition-colors`}
@@ -229,7 +220,12 @@ const SideBar: React.FC<SideBarProps> = ({
             <div className="flex items-center gap-4">
               <button
                 onClick={() => handleDatabaseClick("mapper")}
-                className="w-20 h-8 bg-[#DBDBDB] hover:bg-gray-300 text-black rounded-lg text-sm"
+                // disabled={AudioZip === null || ImageZip === null}
+                className={`w-20 h-8 ${
+                  (AudioZip && ImageZip) || true
+                    ? "bg-[#DBDBDB] hover:bg-gray-300"
+                    : "bg-gray-500 cursor-not-allowed"
+                } text-black rounded-lg text-sm`}
               >
                 Mapper
               </button>
@@ -241,12 +237,7 @@ const SideBar: React.FC<SideBarProps> = ({
             <div className="flex items-center gap-4">
               <button
                 onClick={() => handleDatabaseClick("image")}
-                disabled={!Mapper}
-                className={`w-20 h-8 ${
-                  Mapper
-                    ? "bg-[#DBDBDB] hover:bg-gray-300"
-                    : "bg-gray-500 cursor-not-allowed"
-                } text-black rounded-lg text-sm`}
+                className="w-20 h-8 bg-[#DBDBDB] hover:bg-gray-300 text-black rounded-lg text-sm"
               >
                 Image
               </button>
@@ -258,12 +249,7 @@ const SideBar: React.FC<SideBarProps> = ({
             <div className="flex items-center gap-4">
               <button
                 onClick={() => handleDatabaseClick("audio")}
-                disabled={!Mapper}
-                className={`w-20 h-8 ${
-                  Mapper
-                    ? "bg-[#DBDBDB] hover:bg-gray-300"
-                    : "bg-gray-500 cursor-not-allowed"
-                } text-black rounded-lg text-sm`}
+                className="w-20 h-8 bg-[#DBDBDB] hover:bg-gray-300 text-black rounded-lg text-sm"
               >
                 Audio
               </button>
@@ -276,11 +262,14 @@ const SideBar: React.FC<SideBarProps> = ({
       </div>
 
       <Form
+        currentView={currentView}
         AudioZip={AudioZip}
         ImageZip={ImageZip}
         isOpen={showForm}
         onClose={() => setShowForm(false)}
-        onFileUpload={uploadType === "content" ? onContentFileUpload : handleDatabaseUpload}
+        onFileUpload={
+          uploadType === "content" ? onContentFileUpload : handleDatabaseUpload
+        }
         uploadType={uploadType}
         allowedFormats={getCurrentAllowedFormats()}
       />

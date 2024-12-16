@@ -1,8 +1,9 @@
 // Form.tsx
 import React, { useState, useEffect } from "react";
-import JSZip from 'jszip';
+import JSZip from "jszip";
 
 interface FormProps {
+  currentView: "audio" | "image" | null;
   isOpen: boolean;
   onClose: () => void;
   onFileUpload: (file: File, totalSize?: number) => void;
@@ -13,6 +14,7 @@ interface FormProps {
 }
 
 const Form: React.FC<FormProps> = ({
+    currentView,
   isOpen,
   onClose,
   onFileUpload,
@@ -92,50 +94,47 @@ const Form: React.FC<FormProps> = ({
 
   const getValidationRules = () => {
     switch (uploadType) {
-      case 'audio':
+      case "audio":
         return {
-          acceptedFormats: ['.zip'],
-          validContents: ['.mid', '.midi'],
-          description: 'MIDI files'
+          acceptedFormats: [".zip"],
+          validContents: [".mid", ".midi"],
+          description: "MIDI files",
         };
-      case 'image':
+      case "image":
         return {
-          acceptedFormats: ['.zip'],
-          validContents: ['.jpg', '.jpeg', '.png'],
-          description: 'Image files'
+          acceptedFormats: [".zip"],
+          validContents: [".jpg", ".jpeg", ".png"],
+          description: "Image files",
         };
-      case 'mapper':
+      case "mapper":
         return {
-          acceptedFormats: ['.json'],
-          description: 'JSON file'
+          acceptedFormats: [".json"],
+          description: "JSON file",
         };
-      case 'content':
+      case "content":
         return {
           acceptedFormats: allowedFormats,
-          description: 'content files'
+          description: "content files",
         };
     }
   };
 
   const getUploadDescription = () => {
-    if (uploadType === 'mapper') return 'JSON file';
-    if (uploadType === 'audio') return 'ZIP file containing MIDI files';
-    if (uploadType === 'image') return 'ZIP file containing images';
-    if (uploadType === 'content') {
-      if (AudioZip && ImageZip) {
-        return 'Audio files (.mid, .midi) or Image files (.jpg, .jpeg, .png)';
-      }
-      if (AudioZip) return 'Audio files (.mid, .midi)';
-      if (ImageZip) return 'Image files (.jpg, .jpeg, .png)';
-      return 'No supported files';
+    if (uploadType === "mapper") return "JSON file";
+    if (uploadType === "audio") return "ZIP file containing MIDI files";
+    if (uploadType === "image") return "ZIP file containing images";
+    if (uploadType === "content") {
+      if (currentView === "audio") return "Audio files (.mid, .midi)";
+      if (currentView === "image") return "Image files (.jpg, .jpeg, .png)";
+      return "No supported files";
     }
-    return 'Supported files';
+    return "Supported files";
   };
 
   const handleFileSelect = async (file: File) => {
     setErrorMessage("");
     const ext = "." + file.name.split(".").pop()?.toLowerCase();
-  
+
     // First check if the file format is allowed
     if (!allowedFormats.includes(ext)) {
       setErrorMessage(
@@ -154,21 +153,22 @@ const Form: React.FC<FormProps> = ({
       setSelectedFile(null);
       return;
     }
-  
+
     // Handle ZIP validation for audio and image types
-    if ((uploadType === 'audio' || uploadType === 'image') && ext === '.zip') {
+    if ((uploadType === "audio" || uploadType === "image") && ext === ".zip") {
       try {
         const zip = await JSZip.loadAsync(file);
         let ValidFiles = false;
         let invalidFiles: string[] = [];
         let totalSize = 0;
         let validFileCount = 0;
-  
+
         // Define valid extensions based on upload type
-        const validExtensions = uploadType === 'audio' 
-          ? ['.mid', '.midi']
-          : ['.jpg', '.jpeg', '.png'];
-  
+        const validExtensions =
+          uploadType === "audio"
+            ? [".mid", ".midi"]
+            : [".jpg", ".jpeg", ".png"];
+
         await Promise.all(
           Object.keys(zip.files).map(async (filename) => {
             const zipFile = zip.files[filename];
@@ -177,7 +177,7 @@ const Form: React.FC<FormProps> = ({
               if (!validExtensions.includes(fileExt)) {
                 invalidFiles.push(filename);
               } else {
-                const fileData = await zipFile.async('blob');
+                const fileData = await zipFile.async("blob");
                 totalSize += fileData.size;
                 validFileCount++;
                 ValidFiles = true;
@@ -185,35 +185,45 @@ const Form: React.FC<FormProps> = ({
             }
           })
         );
-        
+
         if (invalidFiles.length > 0) {
           setErrorMessage(
-            `Invalid files found in ZIP:\n${invalidFiles.slice(0, 3).join(", ")}${
-              invalidFiles.length > 3 ? ` and ${invalidFiles.length - 3} more` : ""
-            }\n\nPlease ensure ZIP contains only ${uploadType === 'audio' ? 'MIDI' : 'image'} files.`
+            `Invalid files found in ZIP:\n${invalidFiles
+              .slice(0, 3)
+              .join(", ")}${
+              invalidFiles.length > 3
+                ? ` and ${invalidFiles.length - 3} more`
+                : ""
+            }\n\nPlease ensure ZIP contains only ${
+              uploadType === "audio" ? "MIDI" : "image"
+            } files.`
           );
           setSelectedFile(null);
           return;
         }
-        
+
         if (!ValidFiles) {
           setErrorMessage(
-            `ZIP file is empty or contains no valid ${uploadType === 'audio' ? 'MIDI' : 'image'} files.`
+            `ZIP file is empty or contains no valid ${
+              uploadType === "audio" ? "MIDI" : "image"
+            } files.`
           );
           setSelectedFile(null);
           return;
         }
-  
+
         setTotalZipSize(totalSize);
         setFileCount(validFileCount);
       } catch (error) {
         console.error("Error validating zip contents:", error);
-        setErrorMessage("Error reading ZIP file. Please ensure it's a valid archive.");
+        setErrorMessage(
+          "Error reading ZIP file. Please ensure it's a valid archive."
+        );
         setSelectedFile(null);
         return;
       }
     }
-  
+
     simulateUpload(file);
   };
 
@@ -221,7 +231,6 @@ const Form: React.FC<FormProps> = ({
     if (selectedFile && uploadProgress === 100) {
       onFileUpload(selectedFile, totalZipSize || selectedFile.size);
       handleClose();
-      
     }
   };
 
@@ -306,9 +315,7 @@ const Form: React.FC<FormProps> = ({
                   <p className="mt-2 text-m text-gray-700">
                     {getUploadDescription()}
                   </p>
-                  <p className="mt-2 text-m text-gray-700">
-                   ~ Max 10MB ~
-                  </p>
+                  <p className="mt-2 text-m text-gray-700">~ Max 10MB ~</p>
                   <input
                     type="file"
                     className="hidden"
@@ -342,7 +349,7 @@ const Form: React.FC<FormProps> = ({
               <div className="flex items-center justify-between text-m">
                 <div className="flex items-center gap-3">
                   <span className="text-black">{selectedFile.name}</span>
-                  {selectedFile.name.endsWith('.zip') ? (
+                  {selectedFile.name.endsWith(".zip") ? (
                     <div className="text-gray-700">
                       <span>{formatFileSize(totalZipSize)} total</span>
                       <span className="ml-2">({fileCount} files)</span>
