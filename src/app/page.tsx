@@ -146,17 +146,16 @@ const HomePage: React.FC = () => {
   const handleContentFileUpload = async (file: File) => {
     
     setUploadedFromUploadButton(true);
+    setQueryFile(file);
+    setUploadedPreviewFile(file);
+
     if (isAudioFile(file)) {
       setLastUploadedMediaType("audio");
-      setQueryFile(file);
-      setUploadedFile(file);
-      setUploadedPreviewFile(file);
+
     } else if (isImageFile(file)) {
       setLastUploadedMediaType("image");
-      setQueryFile(file);
-      setUploadedFile(file);
-      setUploadedPreviewFile(file);
     }
+
   };
 
   const handleSearchQuery = async () => {
