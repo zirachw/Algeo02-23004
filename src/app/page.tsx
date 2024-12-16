@@ -28,6 +28,8 @@ const HomePage: React.FC = () => {
   const [AudioZip, setAudioZip] = useState<File | null>(null);
   const [ImageZip, setImageZip] = useState<File | null>(null);
 
+  const [queryFile, setQueryFile] = useState<File | null>(null);
+
   const [similarData, setSimilarData] = useState<SimilarData | null>(null);
 
   // Upload button and navigation states
@@ -144,12 +146,24 @@ const HomePage: React.FC = () => {
   const handleContentFileUpload = async (file: File) => {
     
     setUploadedFromUploadButton(true);
-
     if (isAudioFile(file)) {
       setLastUploadedMediaType("audio");
+      setQueryFile(file);
+      setUploadedFile(file);
+      setUploadedPreviewFile(file);
+    } else if (isImageFile(file)) {
+      setLastUploadedMediaType("image");
+      setQueryFile(file);
+      setUploadedFile(file);
+      setUploadedPreviewFile(file);
+    }
+  };
+
+  const handleSearchQuery = async () => {
+    const file = queryFile;
+    if (lastUploadedMediaType == "audio"){
       try {
         const formData = new FormData();
-
         if (file) {
           formData.append("file", file);
         }
@@ -163,20 +177,16 @@ const HomePage: React.FC = () => {
           const result = await response.json();
           console.log("Image dataset queried successfully:", result);
           setSimilarData(result);
-          setUploadedFile(file);
-          setUploadedPreviewFile(file);
         } else {
           const error = await response.json();
           console.error("Error querying audio:", error);
         }
       } catch (error) {
         console.error("Failed to query audio:", error);
-      }
-    } else if (isImageFile(file)) {
-      setLastUploadedMediaType("image");
+      } 
+    } else if (lastUploadedMediaType == "image"){
       try {
         const formData = new FormData();
-        
         if (file) {
           formData.append("file", file);
         }
@@ -189,9 +199,7 @@ const HomePage: React.FC = () => {
         if (response.ok) {
           const result = await response.json();
           console.log("Audio query successfully:", result);
-          setSimilarData(result);
-          setUploadedFile(file);
-          setUploadedPreviewFile(file);
+          setSimilarData(result);          
         } else {
           const error = await response.json();
           console.error("Error querying image:", error);
@@ -200,7 +208,7 @@ const HomePage: React.FC = () => {
         console.error("Failed to query image:", error);
       }
     }
-  };
+  }
 
   const handlePlayClick = (song: {
     title: string;
@@ -222,6 +230,7 @@ const HomePage: React.FC = () => {
       <SideBar
         onDatabaseFileUpload={handleDatabaseFileUpload}
         onContentFileUpload={handleContentFileUpload}
+        onSearchQuery={handleSearchQuery}
         Mapper={Mapper}
         AudioZip={AudioZip}
         ImageZip={ImageZip}

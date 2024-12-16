@@ -6,6 +6,7 @@ import Form from "./Form";
 interface SideBarProps {
   onDatabaseFileUpload: (file: File, type: "mapper" | "audio" | "image") => void;
   onContentFileUpload: (file: File) => void;
+  onSearchQuery: () => void;
   Mapper: File | null;
   AudioZip: File | null;
   ImageZip: File | null;
@@ -23,6 +24,7 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({
   onDatabaseFileUpload,
   onContentFileUpload,
+  onSearchQuery,
   Mapper,
   AudioZip,
   ImageZip,
@@ -199,7 +201,7 @@ const SideBar: React.FC<SideBarProps> = ({
 
             {/* Tombol Search */}
             <button
-              onClick={() => alert("Search functionality triggered!")}
+              onClick={onSearchQuery}
               disabled={!isUploaded}
               className={`w-[100px] h-[40px] ${
                 isUploaded
