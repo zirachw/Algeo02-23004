@@ -11,6 +11,7 @@ interface SideBarProps {
   ImageZip: File | null;
   uploadedPreviewFile: File | null;
   currentSong: { title: string; image: string; singer: string } | null;
+  isUploaded: boolean;
   onPlayClick?: (song: {
     title: string;
     image: string;
@@ -26,6 +27,7 @@ const SideBar: React.FC<SideBarProps> = ({
   AudioZip,
   ImageZip,
   uploadedPreviewFile,
+  isUploaded,
   onPlayClick,
 }) => {
   const [showForm, setShowForm] = useState(false);
@@ -119,7 +121,7 @@ const SideBar: React.FC<SideBarProps> = ({
   return (
     <div className="w-1/5 bg-gradient-to-b from-[#535353] to-[#303030] flex flex-col">
 
-      <div className="flex-1 flex flex-col justify-normal items-center px-8 space-y-8">
+      <div className="flex-1 flex flex-col justify-between items-center px-8 py-8 gap-8">
         <h1 className="text-4xl text-[#DBDBDB]">Melodia.</h1>
         {/* Preview Card - Shows currently uploaded content file */}
         <div className="flex justify-center">
@@ -182,17 +184,32 @@ const SideBar: React.FC<SideBarProps> = ({
         </div>
 
         <div className="flex justify-center border-b border-[#DBDBDB]/20 pb-6">
-          <button
-            onClick={handleUploadClick}
-            disabled={!Mapper || (!AudioZip && !ImageZip)}
-            className={`w-[200px] h-[40px] ${
-              Mapper && (AudioZip || ImageZip)
-                ? "bg-[#DBDBDB] hover:bg-gray-300"
-                : "bg-gray-500 cursor-not-allowed"
-            } text-black rounded-lg text-sm transition-colors`}
-          >
-            Upload
-          </button>
+          <div className="flex space-x-4"> 
+            <button
+              onClick={handleUploadClick}
+              disabled={!Mapper || (!AudioZip && !ImageZip)}
+              className={`w-[100px] h-[40px] ${
+                Mapper && (AudioZip || ImageZip)
+                  ? "bg-[#DBDBDB] hover:bg-gray-300"
+                  : "bg-gray-500 cursor-not-allowed"
+              } text-black rounded-lg text-sm transition-colors`}
+            >
+              Upload
+            </button>
+
+            {/* Tombol Search */}
+            <button
+              onClick={() => alert("Search functionality triggered!")}
+              disabled={!isUploaded}
+              className={`w-[100px] h-[40px] ${
+                isUploaded
+                  ? "bg-[#DBDBDB] hover:bg-gray-300"
+                  : "bg-gray-500 cursor-not-allowed"
+              } text-black rounded-lg text-sm transition-colors`}
+            >
+              Search
+            </button>
+          </div>
         </div>
 
         <div className="space-y-4">

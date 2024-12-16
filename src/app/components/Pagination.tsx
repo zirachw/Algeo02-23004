@@ -46,7 +46,7 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-between mt-8">
+    <div className="flex items-center justify-between">
       {/* Showing entries info */}
       <div className="text-l text-black">
         Showing {startItem} - {endItem} of {totalItems} Entries
