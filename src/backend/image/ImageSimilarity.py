@@ -9,7 +9,7 @@ import time
 import logging
 import cv2
 import numpy as np
-
+from PIL import Image
 
 console = Console()
 
@@ -90,12 +90,19 @@ class ImageProcessor:
 
     def preprocess_image(self, image: np.ndarray) -> np.ndarray:
         """Convert image to grayscale, resize, and flatten"""
-        if len(image.shape) == 3:
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        else:
-            gray = image
-        resized = cv2.resize(gray, self.target_size)
-        return resized.flatten()
+        # Convert to PIL Image if not already
+        if not isinstance(image, Image.Image):
+            # If it's a numpy array with 3 channels, convert to grayscale
+            if len(image.shape) == 3:
+                image = Image.fromarray(image).convert('L')
+            else:
+                image = Image.fromarray(image)
+        
+        # Resize the image
+        resized = image.resize(self.target_size, Image.LANCZOS)
+        
+        # Convert to numpy array and flatten
+        return np.array(resized).flatten()
 
     def compute_pca(self, X: np.ndarray, k: int = 100):
         """Manual PCA computation using eigendecomposition"""
@@ -107,6 +114,7 @@ class ImageProcessor:
         
         # Compute covariance matrix C = (1/N)X'X
         C = np.dot(X_centered.T, X_centered) / n_samples
+        C = np.dot(C, C.T)
         
         # Compute eigenvalues and eigenvectors
         eigenvalues, eigenvectors = np.linalg.eigh(C)
