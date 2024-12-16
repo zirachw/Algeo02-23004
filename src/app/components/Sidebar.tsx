@@ -210,7 +210,6 @@ const SideBar: React.FC<SideBarProps> = ({
             Information:
           </h2>
           <div className="space-y-2 text-[#DBDBDB]/80 text-sm pl-2">
-            <p>Total Songs: {audioFilename ? "100" : "-"}</p>
             <p>Images Size: {imageFilename ? imageSize : "-"}</p>
             <p>Audios Size: {audioFilename ? audioSize : "-"}</p>
           </div>
