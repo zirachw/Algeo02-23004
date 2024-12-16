@@ -86,9 +86,10 @@ def format_results(results: dict) -> None:
     console.print("\n")
 
 def test_image_search():
-    api_url = 'http://127.0.0.1:8000/search-images'
+    api_url1 = 'http://127.0.0.1:8000/upload-image-dataset'
+    api_url2 = 'http://127.0.0.1:8000/search-images'
     
-    current_dir = Path(__file__).parent.parent.parent
+    current_dir = Path(__file__).parent.parent.parent.parent
     file_name = input("Enter the name of the image file (with extension): ")
     image_path = current_dir / 'test' / file_name
     

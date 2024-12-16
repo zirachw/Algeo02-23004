@@ -8,12 +8,14 @@ interface CardListProps {
     image: string;
     singer: string;
     genre: string;
+    audio: string;
   }[];
   onPlayClick?: (song: {
     title: string;
     image: string;
     singer: string;
     genre: string;
+    audio: string;
   }) => void;
   AudioZip: File | null;
 }
