@@ -1,95 +1,354 @@
 {
   "songs": [
     {
-      "audio": "audio1.mid",
-      "album": "image1.jpeg",
-      "song": "Mind Games",
-      "singer": "John Lennon",
-      "genre": "Chamber rock"
+      "audio": "3_nights.mid",
+      "album": "3_nights.png",
+      "song": "3 Nights",
+      "singer": "Dominic Fike",
+      "genre": "-"
     },
     {
-      "audio": "audio2.mid",
-      "album": "image2.jpg",
-      "song": "Sailor Song",
-      "singer": "Gigi Perez",
+      "audio": "7_years.mid",
+      "album": "7_years.jpg",
+      "song": "7 Years",
+      "singer": "Lukas Graham",
+      "genre": "Soul pop"
+    },
+    {
+      "audio": "a_sky_full_of_stars.mid",
+      "album": "a_sky_full_of_stars.jpeg",
+      "song": "A Sky Full of Stars",
+      "singer": "Coldplay",
+      "genre": "Electronic"
+    },
+    {
+      "audio": "a_thousand_years.mid",
+      "album": "a_thousand_years.jpg",
+      "song": "A Thousand Years",
+      "singer": "James Arthur",
+      "genre": "Pop"
+    },
+    {
+      "audio": "aeolian_harp.mid",
+      "album": "aeolian_harp.jpeg",
+      "song": "Aeolian Harp",
+      "singer": "Chopin",
+      "genre": "Classical"
+    },
+    {
+      "audio": "all_i_ask.mid",
+      "album": "all_i_ask.jpg",
+      "song": "All I Ask",
+      "singer": "Adele",
+      "genre": "Soul"
+    },
+    {
+      "audio": "all_my_fellas.mid",
+      "album": "all_my_fellas.jpeg",
+      "song": "All My Fellas",
+      "singer": "Ariana Grande",
+      "genre": "Pop"
+    },
+    {
+      "audio": "another_love.mid",
+      "album": "another_love.jpg",
+      "song": "Another Love",
+      "singer": "Tom Odell",
+      "genre": "Indie pop"
+    },
+    {
+      "audio": "another_one_bites_the_dust.mid",
+      "album": "another_one_bites_the_dust.jpg",
+      "song": "Another One Bites the Dust",
+      "singer": "Queen",
+      "genre": "Funk rock"
+    },
+    {
+      "audio": "apt.mid",
+      "album": "apt.jpg",
+      "song": "APT",
+      "singer": "Rose & Bruno Mars",
+      "genre": "Pop"
+    },
+    {
+      "audio": "aria_math.mid",
+      "album": "aria_math.jpeg",
+      "song": "Aria Math",
+      "singer": "C418",
+      "genre": "Electronic"
+    },
+    {
+      "audio": "astronamia.mid",
+      "album": "astronamia.png",
+      "song": "Astronamia",
+      "singer": "Vicetone & Tony Igy",
+      "genre": "Progressive house"
+    },
+    {
+      "audio": "axel_f.mid",
+      "album": "axel_f.jpeg",
+      "song": "Axel F",
+      "singer": "Crazy Frog",
+      "genre": "Electronic"
+    },
+    {
+      "audio": "barbie_girl.mid",
+      "album": "barbie_girl.png",
+      "song": "barbie_girl",
+      "singer": "Aqua",
+      "genre": "Bubblegum dance"
+    },
+    {
+      "audio": "beat_it.mid",
+      "album": "beat_it.jpeg",
+      "song": "Beat It",
+      "singer": "Michael Jackson",
+      "genre": "Hard rock"
+    },
+    {
+      "audio": "birds_of_a_feather.mid",
+      "album": "birds_of_a_feather.jpeg",
+      "song": "Birds of a Feather",
+      "singer": "Billie Eilish",
+      "genre": "Pop"
+    },
+    {
+      "audio": "blinding_lights.mid",
+      "album": "blinding_lights.jpg",
+      "song": "Blinding Lights",
+      "singer": "The Weeknd",
+      "genre": "Synthwave"
+    },
+    {
+      "audio": "bohemian_rhapsody.mid",
+      "album": "bohemian_rhapsody.jpg",
+      "song": "Bohemian Rhapsody",
+      "singer": "Crazy Frog",
+      "genre": "Electronic"
+    },
+    {
+      "audio": "bound_2.mid",
+      "album": "bound_2.jpeg",
+      "song": "Bound 2",
+      "singer": "Kanye West",
+      "genre": "Hip hop"
+    },
+    {
+      "audio": "canon_in_d.mid",
+      "album": "canon_in_d.jpeg",
+      "song": "Canon in D",
+      "singer": "Pachelbel",
+      "genre": "Classical"
+    },
+    {
+      "audio": "careless_whisper.mid",
+      "album": "careless_whisper.jpg",
+      "song": "Careless Whisper",
+      "singer": "George Michael",
+      "genre": "Pop"
+    },
+    {
+      "audio": "cars_outside.mid",
+      "album": "cars_outside.jpeg",
+      "song": "Cars Outside",
+      "singer": "James Arthur",
+      "genre": "Pop"
+    },
+    {
+      "audio": "champagne_supernova.mid",
+      "album": "champagne_supernova.jpg",
+      "song": "Champagne Supernova",
+      "singer": "Oasis",
+      "genre": "Britpop"
+    },
+    {
+      "audio": "chipi_chipi_chapa_chapa.mid",
+      "album": "chipi_chipi_chapa_chapa.jpg",
+      "song": "Chipi Chipi Chapa Chapa",
+      "singer": "Christell",
+      "genre": "Pop"
+    },
+    {
+      "audio": "congratulations.mid",
+      "album": "congratulations.png",
+      "song": "Congratulations",
+      "singer": "Mac Miller",
+      "genre": "Hip hop"
+    },
+    {
+      "audio": "counting_stars.mid",
+      "album": "counting_stars.jpg",
+      "song": "Counting Stars",
+      "singer": "OneRepublic",
+      "genre": "Pop rock"
+    },
+    {
+      "audio": "creep.mid",
+      "album": "creep.jpeg",
+      "song": "Creep",
+      "singer": "Radiohead",
+      "genre": "Alternative rock"
+    },
+    {
+      "audio": "ddu_du_ddu_du.mid",
+      "album": "ddu_du_ddu_du.jpg",
+      "song": "DDU-DU DDU-DU",
+      "singer": "BLACKPINK",
+      "genre": "K-pop"
+    },
+    {
+      "audio": "despacito.mid",
+      "album": "despacito.jpeg",
+      "song": "Despacito",
+      "singer": "Luis Fonsi",
+      "genre": "Reggaeton"
+    },
+    {
+      "audio": "faded.mid",
+      "album": "faded.jpg",
+      "song": "Faded",
+      "singer": "Alan Walker",
+      "genre": "Electro house"
+    },
+    {
+      "audio": "fnaf.mid",
+      "album": "fnaf.jpg",
+      "song": "FNAF",
+      "singer": "The Living Tombstone",
+      "genre": "Electronic"
+    },
+    {
+      "audio": "gangstas_paradise.mid",
+      "album": "gangstas_paradise.jpg",
+      "song": "Gangsta's Paradise",
+      "singer": "Coolio",
+      "genre": "Gangsta rap"
+    },
+    {
+      "audio": "gods_plan.mid",
+      "album": "gods_plan.jpeg",
+      "song": "God's Plan",
+      "singer": "Drake",
+      "genre": "Hip hop"
+    },
+    {
+      "audio": "golden_hour.mid",
+      "album": "golden_hour.jpeg",
+      "song": "Golden Hour",
+      "singer": "JVKE",
+      "genre": "Pop"
+    },
+    {
+      "audio": "hope.mid",
+      "album": "hope.jpeg",
+      "song": "Hope",
+      "singer": "XXXTENTACION",
+      "genre": "Hip hop"
+    },
+    {
+      "audio": "mary_on_a_cross.mid",
+      "album": "mary_on_a_cross.jpeg",
+      "song": "Mary on a Cross",
+      "singer": "Ghostemane",
+      "genre": "Trap metal"
+    },
+    {
+      "audio": "merry_go_round_of_life.mid",
+      "album": "merry_go_round_of_life.jpg",
+      "song": "Merry-Go-Round of Life",
+      "singer": "Joe Hisaishi",
+      "genre": "Classical"
+    },
+    {
+      "audio": "my_love_mine_all_mine.mid",
+      "album": "my_love_mine_all_mine.png",
+      "song": "My Love, Mine All Mine",
+      "singer": "Mitski",
+      "genre": "Indie rock"
+    },
+    {
+      "audio": "my_way.mid",
+      "album": "my_way.jpg",
+      "song": "My Way",
+      "singer": "Frank Sinatra",
+      "genre": "Traditional pop"
+    },
+    {
+      "audio": "never_gonna_give_you_up.mid",
+      "album": "never_gonna_give_you_up.jpg",
+      "song": "Never Gonna Give You Up",
+      "singer": "Rick Astley",
+      "genre": "Dance-pop"
+    },
+    {
+      "audio": "payphone.mid",
+      "album": "payphone.png",
+      "song": "Payphone",
+      "singer": "Maroon 5",
+      "genre": "Pop rock"
+    },
+    {
+      "audio": "pompeii.mid",
+      "album": "pompeii.jpeg",
+      "song": "Pompeii",
+      "singer": "Bastille",
+      "genre": "Indie pop"
+    },
+    {
+      "audio": "riptide.mid",
+      "album": "riptide.jpeg",
+      "song": "Riptide",
+      "singer": "Vance Joy",
       "genre": "Indie folk"
     },
     {
-      "audio": "audio3.mid",
-      "album": "image3.jpg",
-      "song": "idfc",
-      "singer": "blackbear",
-      "genre": "Alternative R&B"
+      "audio": "see_you_again.mid",
+      "album": "see_you_again.png",
+      "song": "See You Again",
+      "singer": "Charlie Puth",
+      "genre": "Pop"
     },
     {
-      "audio": "audio4.mid",
-      "album": "image4.jpeg",
-      "song": "Daylight",
-      "singer": "David Kushner",
-      "genre": "Gothic pop"
+      "audio": "stay.mid",
+      "album": "stay.jpg",
+      "song": "STAY",
+      "singer": "Justin Bieber",
+      "genre": "Pop"
     },
     {
-      "audio": "audio5.mid",
-      "album": "image5.png",
-      "song": "APT.",
-      "singer": "Rose & Bruno Mars",
-      "genre": "Jazz"
+      "audio": "symphony.mid",
+      "album": "symphony.png",
+      "song": "Symphony",
+      "singer": "Zara Larsson",
+      "genre": "Dance-pop"
     },
     {
-      "audio": "audio6.mid",
-      "album": "image6.jpeg",
-      "song": "GNAT",
+      "audio": "the_real_slim_shady.mid",
+      "album": "the_real_slim_shady.png",
+      "song": "The Real Slim Shady",
       "singer": "Eminem",
       "genre": "Hip hop"
     },
     {
-      "audio": "audio7.mid",
-      "album": "image7.jpg",
-      "song": "Watch",
+      "audio": "uptown_funk.mid",
+      "album": "uptown_funk.png",
+      "song": "Uptown Funk",
+      "singer": "Mark Ronson",
+      "genre": "Dance-pop"
+    },
+    {
+      "audio": "we_dont_talk_anymore.mid",
+      "album": "we_dont_talk_anymore.jpg",
+      "song": "We Don't Talk Anymore",
+      "singer": "Charlie Puth",
+      "genre": "Pop"
+    },
+    {
+      "audio": "what_was_i_made_for.mid",
+      "album": "what_was_i_made_for.png",
+      "song": "What Was I Made For",
       "singer": "Billie Eilish",
-      "genre": "Pop ballad"
-    },
-    {
-      "audio": "audio8.mid",
-      "album": "image8.jpeg",
-      "song": "Perayaan Mati Rasa",
-      "singer": "Umay & Netania",
-      "genre": "Alternative rock"
-    },
-    {
-      "audio": "audio9.mid",
-      "album": "image9.jpeg",
-      "song": "Rumah ke Rumah",
-      "singer": "Hindia",
-      "genre": "Indonesian Indie"
-    },
-    {
-      "audio": "audio10.mid",
-      "album": "image10.jpeg",
-      "song": "Swimming",
-      "singer": "Flawed Mangoes",
-      "genre": "Electronic Downtempo"
-    },
-    {
-      "audio": "audio11.mid",
-      "album": "image11.png",
-      "song": "No. 1 Party Anthem",
-      "singer": "Arctic Monkeys",
-      "genre": "Indie rock"
-    },
-    {
-      "audio": "audio12.mid",
-      "album": "image12.jpeg",
-      "song": "Beanie",
-      "singer": "Chealk",
-      "genre": "Indie & Alternative"
-    },
-    {
-      "audio": "7_years.mid",
-      "album": "image3.jpg",
-      "song": "idfc",
-      "singer": "blackbear",
-      "genre": "Alternative R&B"
+      "genre": "Pop"
     }
   ]
 }
