@@ -26,8 +26,9 @@ export default function AudioPlayer({ isEnabled, currentSong }: AudioPlayerProps
 
   useEffect(() => {
     if (currentSong?.audio) {
+      console.log(currentSong);
       // Load MIDI file
-      fetch(currentSong.audio)
+      fetch(`temp_extracted/audio/${currentSong.audio}`)
         .then((response) => response.arrayBuffer())
         .then((data) => {
           const midiData = new Midi(data);
@@ -169,7 +170,7 @@ export default function AudioPlayer({ isEnabled, currentSong }: AudioPlayerProps
         <div className="w-10 h-10 bg-gray-200 flex-shrink-0">
           {currentSong.image && (
             <img
-              src={`/temp_extracted/images/${currentSong.image}`}
+              src={`temp_extracted/images/${currentSong.image}`}
               alt={currentSong.title}
               className="w-full h-full object-cover"
             />
