@@ -5,6 +5,7 @@ from rich.console import Console
 from rich.table import Table
 from typing import List, Dict
 from pathlib import Path
+import os
 import time
 import logging
 import cv2
@@ -44,22 +45,38 @@ class ImageDatasetLoader:
             self.mapper_data = json.load(f)
         return self.mapper_data
     
-    def setup_dataset(self, zip_path, mapper_path):
+    def setup_dataset(self, zip_path, mapper_path:None):
         start_time = time.time()
         console.print("[bold blue]Setting up dataset...")
         self.extract_zip(str(self.test_dir / zip_path), self.images_dir)
-        self.load_mapper(mapper_path)
+
+        
         image_metadata = []
-        for song in self.mapper_data["songs"]:
-            image_path = self.find_image_file(song["album"])
-            if image_path:
-                image_metadata.append({
-                    "path": str(image_path),
-                    "song": song["song"],
-                    "singer": song["singer"],
-                    "genre": song["genre"],
-                    "album": song["album"]
-                })
+        if mapper_path:
+            self.load_mapper(mapper_path)
+            for song in self.mapper_data["songs"]:
+                image_path = self.find_image_file(song["album"])
+                if image_path:
+                    image_metadata.append({
+                        "path": str(image_path),
+                        "song": song["song"],
+                        "singer": song["singer"],
+                        "genre": song["genre"],
+                        "album": song["album"],
+                        "audio": song["audio"]
+                    })
+        else:
+            for album in os.listdir(self.images_dir):
+                image_path = self.images_dir / album
+                if image_path:
+                    image_metadata.append({
+                        "path": str(image_path),
+                        "song": album,
+                        "singer": "-",
+                        "genre": "-",
+                        "album": album,
+                        "audio":"-"
+                    })
         setup_time = time.time() - start_time
         console.print(f"[green]Dataset setup completed in {setup_time:.2f} seconds")
         return image_metadata
@@ -186,7 +203,7 @@ class ImageProcessor:
         
         return table
 
-    def load_dataset(self, temp_zip, mapper_path):
+    def load_dataset(self, temp_zip, mapper_path: None):
         """Load and process the dataset with timing"""
         start_time = time.time()
         

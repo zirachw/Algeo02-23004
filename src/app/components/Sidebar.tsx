@@ -76,10 +76,10 @@ const SideBar: React.FC<SideBarProps> = ({
   };
 
   const handleUploadClick = () => {
-    if (!Mapper) {
-      alert("Please upload mapper.json first using the Mapper button below");
-      return;
-    }
+    // if (!Mapper) {
+    //   alert("Please upload mapper.json first using the Mapper button below");
+    //   return;
+    // }
     if (!AudioZip && !ImageZip) {
       alert("Please upload either an audio ZIP or image ZIP file first");
       return;
@@ -224,7 +224,7 @@ const SideBar: React.FC<SideBarProps> = ({
                 onClick={() => handleDatabaseClick("mapper")}
                 // disabled={AudioZip === null || ImageZip === null}
                 className={`w-20 h-8 ${
-                  (AudioZip && ImageZip) || true
+                  (AudioZip && ImageZip)
                     ? "bg-[#DBDBDB] hover:bg-gray-300"
                     : "bg-gray-500 cursor-not-allowed"
                 } text-black rounded-lg text-sm`}

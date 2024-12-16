@@ -10,7 +10,7 @@ interface Song {
   song: string;
   singer: string;
   album: string;
-  genre: string;
+  similarity_percentage: number;
   audio: string;
 }
 
@@ -43,17 +43,21 @@ const CardSection: React.FC<CardSectionProps> = ({
   Mapper,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const Songs = similarData ? similarData.matching_results : songData.songs;
-  if (similarData)
-    console.log(
-      "this is similarData.matching_results: ",
-      similarData.matching_results
+  let filteredSongs: Song[] = [];
+  if (similarData){
+    const Songs = similarData.matching_results;
+    if (similarData)
+      console.log(
+        "this is similarData.matching_results: ",
+        similarData.matching_results
+      );
+    filteredSongs = Songs.filter(
+      (song) =>
+        song.song.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        song.singer.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  const filteredSongs = Songs.filter(
-    (song) =>
-      song.song.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      song.singer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  } 
+
 
   const totalPages = Math.ceil(filteredSongs.length / ITEMS_PER_PAGE);
 
@@ -63,7 +67,7 @@ const CardSection: React.FC<CardSectionProps> = ({
       title: song.song,
       image: `${song.album}`,
       singer: song.singer,
-      genre: song.genre,
+      similarity_percentage: song.similarity_percentage,
       audio: `${song.audio}`,
     }));
 
@@ -71,7 +75,7 @@ const CardSection: React.FC<CardSectionProps> = ({
     title: string;
     image: string;
     singer: string;
-    genre: string;
+    similarity_percentage: number;
     audio: string;
   }) => {
     if (AudioZip && songData && songData.title) {

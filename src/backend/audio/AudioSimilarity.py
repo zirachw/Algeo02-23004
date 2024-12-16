@@ -1,5 +1,7 @@
+
 # main.py
 from fastapi import FastAPI, UploadFile, File
+import os
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -89,36 +91,57 @@ class AudioDatasetLoader:
             console.print(f"[red]Error processing MIDI file {inputPath}: {e}")
             raise
     
-    def setup_dataset(self, zip_path, mapper_path) -> List[Dict]:
+    def setup_dataset(self, zip_path, mapper_path: None) -> List[Dict]:
         """Set up the dataset by extracting files and processing MIDI files"""
         startTime = time.time()
         console.print("[bold blue]Setting up dataset...")
-        
+        console.print("masuk ke sini")
+
         # Extract zip file
         self.extract_zip(str(self.test_dir / zip_path), self.audios_dir)
-        self.load_mapper(mapper_path)
-        
+
         audioMetadata = []
-        for song in self.mapperData["songs"]:
-            midiPath = self.audios_dir / song["audio"]
-            if midiPath.exists():
-                # Create output path for channel 1 extraction
-                channel1Path = self.audios_dir / f"{midiPath.stem}_channel1.mid"
-                self.extract_channel1(midiPath, channel1Path)
-                
-                # Create metadata with only required fields and default values
-                metadata = {
-                    "path": str(channel1Path),
-                    "song": song["song"],
-                    "album": song["album"],
-                    "singer": song.get("singer", "-"),
-                    "genre": song.get("genre", "-"),
-                    "audio": song["audio"]
-                }
-                
-                audioMetadata.append(metadata)
-            else:
-                console.print(f"[red]Warning: MIDI file not found: {midiPath}")
+        if mapper_path:
+            self.load_mapper(mapper_path)
+            for song in self.mapperData["songs"]:
+                midiPath = self.audios_dir / song["audio"]
+                if midiPath.exists():
+                    # Create output path for channel 1 extraction
+                    channel1Path = self.audios_dir / f"{midiPath.stem}_channel1.mid"
+                    self.extract_channel1(midiPath, channel1Path)
+                    
+                    # Create metadata with only required fields and default values
+                    metadata = {
+                        "path": str(channel1Path),
+                        "song": song["song"],
+                        "album": song["album"],
+                        "singer": song.get("singer", "-"),
+                        "genre": song.get("genre", "-"),
+                        "audio": song["audio"]
+                    }
+                    
+                    audioMetadata.append(metadata)
+                else:
+                    console.print(f"[red]Warning: MIDI file not found: {midiPath}")
+        else:
+            for audio in os.listdir(self.audios_dir):
+                midiPath = self.audios_dir / audio
+                if midiPath.exists():
+                    channel1Path = self.audios_dir / f"{audio}_channel1.mid"
+                    self.extract_channel1(midiPath, channel1Path)
+                    
+                    metadata = {
+                        "path": str(channel1Path),
+                        "song": audio,
+                        "album": "-",
+                        "singer": "-",
+                        "genre": "-",
+                        "audio": audio
+                    }
+                    audioMetadata.append(metadata)
+                else:
+                    console.print(f"[red]Warning: MIDI file not found: {midiPath}")
+
         
         setupTime = time.time() - startTime
         console.print(f"[green]Dataset setup completed in {setupTime:.2f} seconds")
@@ -185,7 +208,7 @@ class AudioProcessor:
         
         # Normalize FTB histogram
         ftbFeatures = ftbFeatures / np.sum(ftbFeatures) if np.sum(ftbFeatures) > 0 else ftbFeatures
-        logger.info("nyampe sini")
+        # logger.info("nyampe sini")
         # Combine all features
         return np.concatenate([atbFeatures, rtbFeatures, ftbFeatures])
 
@@ -234,7 +257,7 @@ class AudioProcessor:
         
         return table
     
-    def load_dataset(self, temp_zip, mapper_path):
+    def load_dataset(self, temp_zip, mapper_path: None):
         """Load and process the dataset with timing"""
         startTime = time.time()
         
@@ -280,6 +303,7 @@ class AudioProcessor:
                 'singer': metadata['singer'],
                 'genre': metadata['genre'],
                 'album': metadata['album'],
+                'audio': metadata['audio'],
                 'similarity_percentage': similarity
             }
             
@@ -301,7 +325,7 @@ class AudioProcessor:
                 'load_time': self.loadTime
             }
         }
-        console.print(result)
+        console.print("ini result: ", results)
         # Print formatted results
         # console.print("\n")
         # console.print(self.create_results_table(results))

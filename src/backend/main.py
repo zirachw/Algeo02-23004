@@ -65,11 +65,13 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 @app.post("/upload-image-dataset")
-async def upload_dataset(mapper_file: UploadFile = File(...), file: UploadFile = File(...)):
-    if not mapper_file or not file:
+async def upload_dataset(file: UploadFile = File(...), mapper_file: UploadFile = File(None)):
+    # console.print(mapper_file.filename)
+    if not file:
         raise HTTPException(status_code=400, detail="Both mapper_file and file are required")
     try:
-        logger.info(f"Received mapper file: {mapper_file.filename}")
+        if mapper_file:
+            logger.info(f"Received mapper file: {mapper_file.filename}")
         logger.info(f"Received dataset file: {file.filename}")
         logger.info("Starting dataset upload...")
         
@@ -83,11 +85,13 @@ async def upload_dataset(mapper_file: UploadFile = File(...), file: UploadFile =
         with open(zip_path, 'wb') as buffer:
             buffer.write(await file.read())
 
-        # Save mapper file
-        mapper_path = f"temp_{mapper_file.filename}"
-        logger.info(f"Saving file to {mapper_path}...")
-        with open(mapper_path, 'wb') as buffer:
-            buffer.write(await mapper_file.read())
+        mapper_path = None
+        if mapper_file:
+            # Save mapper file
+            mapper_path = f"temp_{mapper_file.filename}"
+            logger.info(f"Saving file to {mapper_path}...")
+            with open(mapper_path, 'wb') as buffer:
+                buffer.write(await mapper_file.read())
         
         # Update DatasetLoader to use this specific zip
         logger.info("Loading dataset...")
@@ -106,11 +110,16 @@ async def upload_dataset(mapper_file: UploadFile = File(...), file: UploadFile =
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.post("/upload-audio-dataset")
-async def upload_dataset(mapper_file: UploadFile = File(...), file: UploadFile = File(...)):
-    if not mapper_file or not file:
+async def upload_dataset(file: UploadFile = File(...), mapper_file: UploadFile = File(None)):
+    console.print("anjay")
+    # console.print(mapper_file.filename)
+    # return {"file": file.filename, "mapper_file": mapper_file.filename if mapper_file else None}
+
+    if not file:
         raise HTTPException(status_code=400, detail="Both mapper_file and file are required")
     try:
-        logger.info(f"Received mapper file: {mapper_file.filename}")
+        if mapper_file:
+            logger.info(f"Received mapper file: {mapper_file.filename}")
         logger.info(f"Received dataset file: {file.filename}")
         logger.info("Starting dataset upload...")
         
@@ -125,10 +134,12 @@ async def upload_dataset(mapper_file: UploadFile = File(...), file: UploadFile =
             buffer.write(await file.read())
 
         # Save mapper file
-        mapper_path = f"temp_{mapper_file.filename}"
-        logger.info(f"Saving file to {mapper_path}...")
-        with open(mapper_path, 'wb') as buffer:
-            buffer.write(await mapper_file.read())
+        mapper_path = None
+        if mapper_file:
+            mapper_path = f"temp_{mapper_file.filename}"
+            logger.info(f"Saving file to {mapper_path}...")
+            with open(mapper_path, 'wb') as buffer:
+                buffer.write(await mapper_file.read())
         
         # Update DatasetLoader to use this specific zip
         logger.info("Loading dataset...")

@@ -9,7 +9,7 @@ interface Song {
   song: string;
   singer: string;
   album: string;
-  genre: string;
+  similarity_percentage: number;
   audio: string;
 }
 
@@ -57,7 +57,7 @@ const HomePage: React.FC = () => {
   // Search functionality
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const isContentReady = Mapper && (AudioZip || ImageZip);
+  const isContentReady = (AudioZip || ImageZip);
 
   const isAudioFile = (file: File): boolean => {
     const fileType = file.type.toLowerCase();
@@ -95,20 +95,15 @@ const HomePage: React.FC = () => {
 
     if (type === "mapper" && fileExt === "json") {
       setMapper(file);
-      return;
-    }
-
-    if (type === "audio" && fileExt === "zip") {
+      //fase pertama upload audio dataset
       try {
         const formData = new FormData();
-        if (Mapper) {
-          formData.append("mapper_file", Mapper);
-        }
-        if (file) {
-          formData.append("file", file);
-        }
         
-        setMapper(null);
+        formData.append("file", AudioZip);
+        console.log(AudioZip?.name);
+        formData.append("mapper_file", file);
+        console.log(file.name);
+        
         
         const response = await fetch(
           "http://127.0.0.1:8000/upload-audio-dataset",
@@ -133,20 +128,18 @@ const HomePage: React.FC = () => {
       } catch (error) {
         console.error("Failed to upload dataset:", error);
       }
-      return;
-    }
 
-    if (type === "image" && fileExt === "zip") {
+
+      // fase kedua upload image dataset
       try {
         const formData = new FormData();
-        if (Mapper) {
-          formData.append("mapper_file", Mapper);
-        }
-        if (file) {
-          formData.append("file", file);
-        }
+
+        formData.append("file", ImageZip);
+        console.log(ImageZip?.name);
+        formData.append("mapper_file", file);
+        console.log(file.name);
         
-        setMapper(null);
+        
         const response = await fetch(
           "http://127.0.0.1:8000/upload-image-dataset",
           {
@@ -155,6 +148,80 @@ const HomePage: React.FC = () => {
             headers: {
               enctype: "multipart/form-data",
             },
+          }
+        );
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Dataset uploaded successfully:", result);
+          setImageZip(file);
+        } else {
+          const error = await response.json();
+          console.error("Error uploading dataset:", error);
+        }
+      } catch (error) {
+        console.error("Failed to upload dataset:", error);
+      }
+      return;
+    }
+
+    if (type === "audio" && fileExt === "zip") {
+      try {
+        const formData = new FormData();
+        // if (Mapper) {
+        //   formData.append("mapper_file", Mapper);
+        // }
+        if (file) {
+          formData.append("file", file);
+        }
+        
+        // setMapper(null);
+        
+        const response = await fetch(
+          "http://127.0.0.1:8000/upload-audio-dataset",
+          {
+            method: "POST",
+            body: formData,
+            // headers: {
+            //   enctype: "multipart/form-data",
+            // },
+          }
+        );
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Dataset uploaded successfully:", result);
+          setAudioZip(file);
+          setShowAudioPlayer(false);
+        } else {
+          const error = await response.json();
+          console.error("Error uploading dataset:", error);
+        }
+      } catch (error) {
+        console.error("Failed to upload dataset:", error);
+      }
+      return;
+    }
+
+    if (type === "image" && fileExt === "zip") {
+      try {
+        const formData = new FormData();
+        // if (Mapper) {
+        //   formData.append("mapper_file", Mapper);
+        // }
+        if (file) {
+          formData.append("file", file);
+        }
+        
+        // setMapper(null);
+        const response = await fetch(
+          "http://127.0.0.1:8000/upload-image-dataset",
+          {
+            method: "POST",
+            body: formData,
+            // headers: {
+            //   enctype: "multipart/form-data",
+            // },
           }
         );
 

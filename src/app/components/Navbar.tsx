@@ -91,7 +91,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
         <div className="flex items-center">
           <span className="text-gray-400 mr-2">Query Time:</span>
-          <span className="text-gray-400"> {queryTime ?? "-"}</span>
+          <span className="text-gray-400"> {queryTime ? (queryTime*1000).toFixed(3) + " ms" : "-"}</span>
         </div>
 
         <div className="relative flex space-x-4 items-center">

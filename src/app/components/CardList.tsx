@@ -7,14 +7,14 @@ interface CardListProps {
     title: string;
     image: string;
     singer: string;
-    genre: string;
+    similarity_percentage: number;
     audio: string;
   }[];
   onPlayClick?: (song: {
     title: string;
     image: string;
     singer: string;
-    genre: string;
+    similarity_percentage: number;
     audio: string;
   }) => void;
   AudioZip: File | null;
@@ -37,7 +37,7 @@ const CardList: React.FC<CardListProps> = ({
           title={item.title}
           imgUrl={item.image}
           singer={item.singer}
-          genre={item.genre}
+          similarity_percentage={item.similarity_percentage}
           onPlayClick={() => onPlayClick?.(item)}
           AudioZip={AudioZip}
           ImageZip={ImageZip}

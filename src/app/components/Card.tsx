@@ -6,7 +6,7 @@ interface CardProps {
   imgUrl: string;
   title: string;
   singer: string;
-  genre: string;
+  similarity_percentage: number;
   onPlayClick?: () => void;
   AudioZip: File | null;
   ImageZip: File | null;
@@ -17,14 +17,13 @@ const Card: React.FC<CardProps> = ({
   imgUrl,
   title,
   singer,
-  genre,
+  similarity_percentage,
   onPlayClick,
   AudioZip,
   ImageZip,
   Mapper,
 }) => {
   const showPlayButton =
-    (AudioZip && ImageZip && Mapper) ||
     (AudioZip && ImageZip === null && Mapper === null);
 
   return (
@@ -56,7 +55,7 @@ const Card: React.FC<CardProps> = ({
       <div className="p-2">
         <h3 className="text-gray-900 text-[20px] pl-1">{title}</h3>
         <p className="text-gray-600 text-[15px] pl-1">{singer}</p>
-        <p className="text-gray-500 text-[12px] mt-1 pl-1">{genre}</p>
+        <p className="text-gray-500 text-[17px] mt-1 pl-1">similarity: {similarity_percentage.toFixed(3)}%</p>
       </div>
     </div>
   );
