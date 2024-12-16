@@ -35,9 +35,6 @@ const CardSection: React.FC<CardSectionProps> = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const Songs = similarData ? similarData.matching_results : songData.songs;
-  
-  console.log("this is Songs: ",Songs);
-  console.log("this is similarData: ",similarData);
   if (similarData) console.log("this is similarData.matching_results: ", similarData.matching_results);
   const filteredSongs = Songs.filter(
     (song) =>
