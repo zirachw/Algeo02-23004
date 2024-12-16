@@ -29,6 +29,7 @@ const HomePage: React.FC = () => {
   const [ImageZip, setImageZip] = useState<File | null>(null);
 
   const [similarData, setSimilarData] = useState<SimilarData | null>(null);
+  const [queryTime, setQueryTime] = useState<number | null>(null);
 
   // Upload button and navigation states
   const [uploadedFromUploadButton, setUploadedFromUploadButton] = useState<boolean>(false);
@@ -163,6 +164,7 @@ const HomePage: React.FC = () => {
           const result = await response.json();
           console.log("Image dataset queried successfully:", result);
           setSimilarData(result);
+          setQueryTime(result.processing_metrics.processing_time);
           setUploadedFile(file);
           setUploadedPreviewFile(file);
         } else {
@@ -190,6 +192,7 @@ const HomePage: React.FC = () => {
           const result = await response.json();
           console.log("Audio query successfully:", result);
           setSimilarData(result);
+          setQueryTime(result.processing_metrics.processing_time);
           setUploadedFile(file);
           setUploadedPreviewFile(file);
         } else {
@@ -241,6 +244,7 @@ const HomePage: React.FC = () => {
           onSearch={handleSearch}
           canSearchByImage={lastUploadedMediaType === "image"}
           canSearchByAudio={lastUploadedMediaType === "audio"}
+          queryTime={queryTime}
         />
 
         {isContentReady ? (
