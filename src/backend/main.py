@@ -76,8 +76,8 @@ async def upload_dataset(file: UploadFile = File(...), mapper_file: UploadFile =
         logger.info("Starting dataset upload...")
         
         # Cleanup any existing dataset
-        logger.info("Cleaning up existing dataset...")
-        imageProcessor.cleanup()
+        # logger.info("Cleaning up existing dataset...")
+        # imageProcessor.cleanup()
 
         # Save uploaded zip file
         zip_path = f"temp_{time.time()}.zip"
@@ -124,8 +124,8 @@ async def upload_dataset(file: UploadFile = File(...), mapper_file: UploadFile =
         logger.info("Starting dataset upload...")
         
         # Cleanup any existing dataset
-        logger.info("Cleaning up existing dataset...")
-        audioProcessor.cleanup()
+        # logger.info("Cleaning up existing dataset...")
+        # audioProcessor.cleanup()
 
         # Save uploaded zip file
         zip_path = f"temp_{time.time()}.zip"

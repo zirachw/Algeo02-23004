@@ -24,7 +24,7 @@ const Card: React.FC<CardProps> = ({
   Mapper,
 }) => {
   const showPlayButton =
-    (AudioZip && ImageZip === null && Mapper === null);
+    (AudioZip);
 
   return (
     <div className="w-full max-w-[210px] mx-auto bg-white rounded-lg shadow-md overflow-hidden relative group transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
