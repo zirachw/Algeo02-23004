@@ -14,6 +14,7 @@ interface NavbarProps {
   lastUploadedMediaType: "audio" | "image" | null;
   onSearch?: (query: string) => void;
   queryTime: number | null;
+}
 
 const Navbar: React.FC<NavbarProps> = ({
   currentView,
